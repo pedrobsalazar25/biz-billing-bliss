@@ -23,10 +23,17 @@ const Invoice = () => {
         waived: false,
       },
       {
-        description: "Basic Website Domain (1 year)",
-        unitPrice: 15,
+        description: "AI Image Generation & Sizing",
+        unitPrice: 70,
         quantity: 1,
-        amount: 15,
+        amount: 70,
+        waived: false,
+      },
+      {
+        description: "Basic Website Domain (1 year)",
+        unitPrice: 9.99,
+        quantity: 1,
+        amount: 9.99,
         waived: true,
       },
       {
