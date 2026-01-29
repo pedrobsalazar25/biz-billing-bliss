@@ -2,7 +2,7 @@ import logo from "@/assets/logo.png";
 
 const Invoice = () => {
   const invoiceData = {
-    invoiceNumber: "INV-001",
+    invoiceNumber: "INV-0017",
     date: "January 29, 2025",
     from: {
       name: "Pedro Barrios",
