@@ -193,7 +193,7 @@ const Invoice = () => {
         </button>
         <a
           href="tel:+34604065849"
-          className="flex items-center justify-center bg-invoice-coral hover:bg-invoice-coral/90 text-primary-foreground p-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
+          className="flex items-center justify-center bg-invoice-coral hover:bg-invoice-coral/90 text-primary-foreground w-12 h-12 rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-105"
           title={language === "en" ? "Call" : "Llamar"}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -202,7 +202,7 @@ const Invoice = () => {
         </a>
         <a
           href="mailto:pedrorafaelbarriossalazar@gmail.com?subject=Invoice%20INV-0017"
-          className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-primary-foreground p-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
+          className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-primary-foreground w-12 h-12 rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-105"
           title="Email"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,7 +213,7 @@ const Invoice = () => {
           href="https://wa.me/34604065849?text=Hello%20Pedro%2C%20I%20have%20a%20question%20about%20invoice%20INV-0017"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-primary-foreground p-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
+          className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-primary-foreground w-12 h-12 rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-105"
           title="WhatsApp"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
