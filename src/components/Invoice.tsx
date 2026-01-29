@@ -63,9 +63,24 @@ const Invoice = () => {
     0
   );
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8 flex items-center justify-center">
-      <div className="w-full max-w-3xl bg-card shadow-2xl rounded-2xl overflow-hidden">
+    <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col items-center justify-center gap-4">
+      {/* Download Button */}
+      <button
+        onClick={handlePrint}
+        className="no-print flex items-center gap-2 bg-invoice-dark hover:bg-invoice-dark/90 text-primary-foreground px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Download PDF
+      </button>
+
+      <div className="w-full max-w-3xl bg-card shadow-2xl rounded-2xl overflow-hidden print-container">
         {/* Header */}
         <div className="invoice-header-bg px-6 py-8 md:px-10 md:py-10 relative">
           <div className="flex justify-between items-start">
