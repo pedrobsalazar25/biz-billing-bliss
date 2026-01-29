@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        display: ['Playfair Display', 'serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -56,6 +60,14 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+        },
+        invoice: {
+          header: "hsl(var(--invoice-header))",
+          orange: "hsl(var(--invoice-orange))",
+          yellow: "hsl(var(--invoice-yellow))",
+          coral: "hsl(var(--invoice-coral))",
+          cream: "hsl(var(--invoice-cream))",
+          dark: "hsl(var(--invoice-dark-text))",
         },
       },
       borderRadius: {
