@@ -1,9 +1,97 @@
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 
+type Language = "en" | "es";
+
+interface TranslatedTexts {
+  title: string;
+  subtitle: string;
+  invoiceTo: string;
+  invoiceNumber: string;
+  date: string;
+  itemDescription: string;
+  unitPrice: string;
+  qty: string;
+  amount: string;
+  included: string;
+  waivedServices: string;
+  total: string;
+  from: string;
+  downloadPdf: string;
+  translate: string;
+  translating: string;
+  items: {
+    webDevelopment: string;
+    aiImageGeneration: string;
+    basicDomain: string;
+    basicHosting: string;
+    ecommerceHosting: string;
+  };
+}
+
+const englishTexts: TranslatedTexts = {
+  title: "Invoice",
+  subtitle: "Web Development Services",
+  invoiceTo: "Invoice To",
+  invoiceNumber: "No. Invoice:",
+  date: "Date:",
+  itemDescription: "Item Description",
+  unitPrice: "Unit Price",
+  qty: "Qty",
+  amount: "Amount",
+  included: "Included",
+  waivedServices: "Waived Services:",
+  total: "Total:",
+  from: "From",
+  downloadPdf: "Download PDF",
+  translate: "Traducir a Español",
+  translating: "Translating...",
+  items: {
+    webDevelopment: "Web Development Services",
+    aiImageGeneration: "AI Image Generation & Sizing",
+    basicDomain: "Basic Website Domain (1 year)",
+    basicHosting: "Basic Hosting (1 year)",
+    ecommerceHosting: "Extra Hosting for E-commerce Platform",
+  },
+};
+
+const spanishTexts: TranslatedTexts = {
+  title: "Factura",
+  subtitle: "Servicios de Desarrollo Web",
+  invoiceTo: "Factura Para",
+  invoiceNumber: "Nº Factura:",
+  date: "Fecha:",
+  itemDescription: "Descripción del Artículo",
+  unitPrice: "Precio Unitario",
+  qty: "Cant",
+  amount: "Importe",
+  included: "Incluido",
+  waivedServices: "Servicios Exentos:",
+  total: "Total:",
+  from: "De",
+  downloadPdf: "Descargar PDF",
+  translate: "Translate to English",
+  translating: "Traduciendo...",
+  items: {
+    webDevelopment: "Servicios de Desarrollo Web",
+    aiImageGeneration: "Generación y Dimensionado de Imágenes con IA",
+    basicDomain: "Dominio Web Básico (1 año)",
+    basicHosting: "Hosting Básico (1 año)",
+    ecommerceHosting: "Hosting Extra para Plataforma E-commerce",
+  },
+};
+
 const Invoice = () => {
+  const [language, setLanguage] = useState<Language>("en");
+  const [isTranslating, setIsTranslating] = useState(false);
+  
+  const texts = language === "en" ? englishTexts : spanishTexts;
+
   const invoiceData = {
     invoiceNumber: "INV-0017",
-    date: "January 29, 2025",
+    date: language === "en" ? "January 29, 2025" : "29 de Enero de 2025",
     from: {
       name: "Pedro Barrios",
       email: "pedrorafaelbarriossalazar@gmail.com",
@@ -16,35 +104,35 @@ const Invoice = () => {
     },
     items: [
       {
-        description: "Web Development Services",
+        description: texts.items.webDevelopment,
         unitPrice: 660,
         quantity: 1,
         amount: 660,
         waived: false,
       },
       {
-        description: "AI Image Generation & Sizing",
+        description: texts.items.aiImageGeneration,
         unitPrice: 70,
         quantity: 1,
         amount: 70,
         waived: false,
       },
       {
-        description: "Basic Website Domain (1 year)",
+        description: texts.items.basicDomain,
         unitPrice: 9.99,
         quantity: 1,
         amount: 9.99,
         waived: true,
       },
       {
-        description: "Basic Hosting (1 year)",
+        description: texts.items.basicHosting,
         unitPrice: 60,
         quantity: 1,
         amount: 60,
         waived: true,
       },
       {
-        description: "Extra Hosting for E-commerce Platform",
+        description: texts.items.ecommerceHosting,
         unitPrice: 90,
         quantity: 1,
         amount: 90,
@@ -67,18 +155,43 @@ const Invoice = () => {
     window.print();
   };
 
+  const handleTranslate = async () => {
+    setIsTranslating(true);
+    try {
+      // Simply toggle between pre-defined translations
+      setLanguage(language === "en" ? "es" : "en");
+      toast.success(language === "en" ? "Traducido a Español" : "Translated to English");
+    } catch (error) {
+      toast.error("Translation failed");
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col items-center justify-center gap-4">
-      {/* Download Button */}
-      <button
-        onClick={handlePrint}
-        className="no-print flex items-center gap-2 bg-invoice-dark hover:bg-invoice-dark/90 text-primary-foreground px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        </svg>
-        Download PDF
-      </button>
+      {/* Action Buttons */}
+      <div className="no-print flex gap-3">
+        <button
+          onClick={handlePrint}
+          className="flex items-center gap-2 bg-invoice-dark hover:bg-invoice-dark/90 text-primary-foreground px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          {texts.downloadPdf}
+        </button>
+        <button
+          onClick={handleTranslate}
+          disabled={isTranslating}
+          className="flex items-center gap-2 bg-invoice-orange hover:bg-invoice-orange/90 text-invoice-dark px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+          </svg>
+          {isTranslating ? texts.translating : texts.translate}
+        </button>
+      </div>
 
       <div className="w-full max-w-3xl bg-card shadow-2xl rounded-2xl overflow-hidden print-container">
         {/* Header */}
@@ -86,10 +199,10 @@ const Invoice = () => {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-4xl md:text-5xl font-display text-primary-foreground mb-2">
-                Invoice
+                {texts.title}
               </h1>
               <p className="text-primary-foreground/70 text-sm max-w-xs">
-                Web Development Services
+                {texts.subtitle}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -105,7 +218,7 @@ const Invoice = () => {
           {/* Client Info & Invoice Details */}
           <div className="mt-8 flex flex-col md:flex-row gap-4">
             <div className="invoice-orange-bg rounded-xl p-5 flex-1">
-              <p className="text-xs font-semibold text-invoice-dark/70 mb-1">Invoice To</p>
+              <p className="text-xs font-semibold text-invoice-dark/70 mb-1">{texts.invoiceTo}</p>
               <h2 className="text-xl font-bold text-invoice-dark mb-2">
                 {invoiceData.to.name}
               </h2>
@@ -120,11 +233,11 @@ const Invoice = () => {
 
             <div className="invoice-yellow-bg rounded-xl p-5 md:w-48">
               <div className="mb-3">
-                <p className="text-xs font-semibold text-invoice-dark/70">No. Invoice:</p>
+                <p className="text-xs font-semibold text-invoice-dark/70">{texts.invoiceNumber}</p>
                 <p className="text-sm font-bold text-invoice-dark">{invoiceData.invoiceNumber}</p>
               </div>
               <div className="mb-3">
-                <p className="text-xs font-semibold text-invoice-dark/70">Date:</p>
+                <p className="text-xs font-semibold text-invoice-dark/70">{texts.date}</p>
                 <p className="text-sm font-bold text-invoice-dark">{invoiceData.date}</p>
               </div>
               <div className="bg-invoice-dark rounded-lg py-2 px-3 text-center mt-4">
@@ -141,16 +254,16 @@ const Invoice = () => {
               <thead>
                 <tr className="border-b-2 border-invoice-dark/10">
                   <th className="text-left py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Item Description
+                    {texts.itemDescription}
                   </th>
                   <th className="text-right py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Unit Price
+                    {texts.unitPrice}
                   </th>
                   <th className="text-center py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Qty
+                    {texts.qty}
                   </th>
                   <th className="text-right py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Amount
+                    {texts.amount}
                   </th>
                 </tr>
               </thead>
@@ -166,7 +279,7 @@ const Invoice = () => {
                       {item.description}
                       {item.waived && (
                         <span className="ml-2 text-xs bg-invoice-coral/20 text-invoice-coral px-2 py-0.5 rounded-full">
-                          Included
+                          {texts.included}
                         </span>
                       )}
                     </td>
@@ -203,12 +316,12 @@ const Invoice = () => {
             <div className="invoice-cream-bg rounded-xl p-5 w-full md:w-72">
               {waivedTotal > 0 && (
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">Waived Services:</span>
+                  <span className="text-muted-foreground">{texts.waivedServices}</span>
                   <span className="text-invoice-coral font-medium">-€{waivedTotal.toFixed(2)}</span>
                 </div>
               )}
               <div className="flex justify-between text-lg font-bold border-t border-invoice-dark/10 pt-3 mt-2">
-                <span className="text-foreground">Total:</span>
+                <span className="text-foreground">{texts.total}</span>
                 <span className="text-invoice-dark">€{subtotal.toFixed(2)}</span>
               </div>
             </div>
@@ -219,7 +332,7 @@ const Invoice = () => {
         <div className="invoice-gradient px-6 py-6 md:px-10 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-center md:text-left">
             <p className="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-1">
-              From
+              {texts.from}
             </p>
             <p className="text-lg font-bold text-primary-foreground">
               {invoiceData.from.name}
