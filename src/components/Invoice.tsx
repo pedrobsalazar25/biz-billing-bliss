@@ -378,7 +378,7 @@ const Invoice = ({ data }: InvoiceProps) => {
                           {currencySymbol}{item.amount.toFixed(2)}
                         </span>
                       ) : (
-                        `€${item.amount.toFixed(2)}`
+                        `${currencySymbol}${item.amount.toFixed(2)}`
                       )}
                     </td>
                   </tr>
