@@ -400,7 +400,7 @@ const Invoice = ({ data }: InvoiceProps) => {
               {waivedTotal > 0 && (
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-muted-foreground">{texts.waivedServices}</span>
-                  <span className="text-invoice-coral font-medium">-€{waivedTotal.toFixed(2)}</span>
+                  <span className="text-invoice-coral font-medium">-{currencySymbol}{waivedTotal.toFixed(2)}</span>
                 </div>
               )}
               <div className="flex justify-between text-lg font-bold border-t border-invoice-dark/10 pt-3 mt-2">
