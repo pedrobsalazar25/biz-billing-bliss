@@ -367,7 +367,7 @@ const Invoice = ({ data }: InvoiceProps) => {
                       )}
                     </td>
                     <td className="py-4 text-sm text-right text-muted-foreground">
-                      €{item.unitPrice.toFixed(2)}
+                      {currencySymbol}{item.unitPrice.toFixed(2)}
                     </td>
                     <td className="py-4 text-sm text-center text-muted-foreground">
                       {item.quantity.toString().padStart(2, "0")}
