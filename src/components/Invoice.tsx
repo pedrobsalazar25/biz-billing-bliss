@@ -375,7 +375,7 @@ const Invoice = ({ data }: InvoiceProps) => {
                     <td className="py-4 text-sm text-right font-medium text-foreground">
                       {item.waived ? (
                         <span className="line-through text-muted-foreground">
-                          €{item.amount.toFixed(2)}
+                          {currencySymbol}{item.amount.toFixed(2)}
                         </span>
                       ) : (
                         `€${item.amount.toFixed(2)}`
