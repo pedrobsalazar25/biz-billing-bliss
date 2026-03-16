@@ -405,7 +405,7 @@ const Invoice = ({ data }: InvoiceProps) => {
               )}
               <div className="flex justify-between text-lg font-bold border-t border-invoice-dark/10 pt-3 mt-2">
                 <span className="text-foreground">{texts.total}</span>
-                <span className="text-invoice-dark">€{subtotal.toFixed(2)}</span>
+                <span className="text-invoice-dark">{currencySymbol}{subtotal.toFixed(2)}</span>
               </div>
             </div>
           </div>
