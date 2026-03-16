@@ -324,7 +324,7 @@ const Invoice = ({ data }: InvoiceProps) => {
                 <p className="text-sm font-bold text-invoice-dark">{invoiceData.date}</p>
               </div>
               <div className="bg-invoice-dark rounded-lg py-2 px-3 text-center mt-4">
-                <p className="text-xl font-bold text-primary-foreground">€{subtotal.toFixed(2)}</p>
+                <p className="text-xl font-bold text-primary-foreground">{currencySymbol}{subtotal.toFixed(2)}</p>
               </div>
             </div>
           </div>
