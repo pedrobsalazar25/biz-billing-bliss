@@ -83,15 +83,47 @@ const spanishTexts: TranslatedTexts = {
   },
 };
 
-const Invoice = () => {
+export interface InvoiceItem {
+  description: string;
+  unitPrice: number;
+  quantity: number;
+  amount: number;
+  waived: boolean;
+}
+
+export interface InvoiceData {
+  invoiceNumber: string;
+  date: string;
+  currency: string;
+  from: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  to: {
+    name: string;
+    company: string;
+    phone: string;
+  };
+  items: InvoiceItem[];
+  taxRate: number;
+  discountAmount: number;
+}
+
+interface InvoiceProps {
+  data?: InvoiceData;
+}
+
+const Invoice = ({ data }: InvoiceProps) => {
   const [language, setLanguage] = useState<Language>("en");
   const [isTranslating, setIsTranslating] = useState(false);
   
   const texts = language === "en" ? englishTexts : spanishTexts;
 
-  const invoiceData = {
+  const defaultData: InvoiceData = {
     invoiceNumber: "INV-0017",
     date: language === "en" ? "January 29, 2025" : "29 de Enero de 2025",
+    currency: "EUR",
     from: {
       name: "Pedro Barrios",
       email: "pedrorafaelbarriossalazar@gmail.com",
@@ -103,43 +135,18 @@ const Invoice = () => {
       phone: "+34 631 08 18 19",
     },
     items: [
-      {
-        description: texts.items.webDevelopment,
-        unitPrice: 660,
-        quantity: 1,
-        amount: 660,
-        waived: false,
-      },
-      {
-        description: texts.items.aiImageGeneration,
-        unitPrice: 70,
-        quantity: 1,
-        amount: 70,
-        waived: false,
-      },
-      {
-        description: texts.items.basicDomain,
-        unitPrice: 9.99,
-        quantity: 1,
-        amount: 9.99,
-        waived: true,
-      },
-      {
-        description: texts.items.basicHosting,
-        unitPrice: 60,
-        quantity: 1,
-        amount: 60,
-        waived: true,
-      },
-      {
-        description: texts.items.ecommerceHosting,
-        unitPrice: 90,
-        quantity: 1,
-        amount: 90,
-        waived: false,
-      },
+      { description: texts.items.webDevelopment, unitPrice: 660, quantity: 1, amount: 660, waived: false },
+      { description: texts.items.aiImageGeneration, unitPrice: 70, quantity: 1, amount: 70, waived: false },
+      { description: texts.items.basicDomain, unitPrice: 9.99, quantity: 1, amount: 9.99, waived: true },
+      { description: texts.items.basicHosting, unitPrice: 60, quantity: 1, amount: 60, waived: true },
+      { description: texts.items.ecommerceHosting, unitPrice: 90, quantity: 1, amount: 90, waived: false },
     ],
+    taxRate: 0,
+    discountAmount: 0,
   };
+
+  const invoiceData = data || defaultData;
+  const currencySymbol = invoiceData.currency === "USD" ? "$" : "€";
 
   const subtotal = invoiceData.items.reduce(
     (sum, item) => sum + (item.waived ? 0 : item.amount),
