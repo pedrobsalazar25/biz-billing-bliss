@@ -83,15 +83,47 @@ const spanishTexts: TranslatedTexts = {
   },
 };
 
-const Invoice = () => {
+export interface InvoiceItem {
+  description: string;
+  unitPrice: number;
+  quantity: number;
+  amount: number;
+  waived: boolean;
+}
+
+export interface InvoiceData {
+  invoiceNumber: string;
+  date: string;
+  currency: string;
+  from: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  to: {
+    name: string;
+    company: string;
+    phone: string;
+  };
+  items: InvoiceItem[];
+  taxRate: number;
+  discountAmount: number;
+}
+
+interface InvoiceProps {
+  data?: InvoiceData;
+}
+
+const Invoice = ({ data }: InvoiceProps) => {
   const [language, setLanguage] = useState<Language>("en");
   const [isTranslating, setIsTranslating] = useState(false);
   
   const texts = language === "en" ? englishTexts : spanishTexts;
 
-  const invoiceData = {
+  const defaultData: InvoiceData = {
     invoiceNumber: "INV-0017",
     date: language === "en" ? "January 29, 2025" : "29 de Enero de 2025",
+    currency: "EUR",
     from: {
       name: "Pedro Barrios",
       email: "pedrorafaelbarriossalazar@gmail.com",
@@ -103,43 +135,18 @@ const Invoice = () => {
       phone: "+34 631 08 18 19",
     },
     items: [
-      {
-        description: texts.items.webDevelopment,
-        unitPrice: 660,
-        quantity: 1,
-        amount: 660,
-        waived: false,
-      },
-      {
-        description: texts.items.aiImageGeneration,
-        unitPrice: 70,
-        quantity: 1,
-        amount: 70,
-        waived: false,
-      },
-      {
-        description: texts.items.basicDomain,
-        unitPrice: 9.99,
-        quantity: 1,
-        amount: 9.99,
-        waived: true,
-      },
-      {
-        description: texts.items.basicHosting,
-        unitPrice: 60,
-        quantity: 1,
-        amount: 60,
-        waived: true,
-      },
-      {
-        description: texts.items.ecommerceHosting,
-        unitPrice: 90,
-        quantity: 1,
-        amount: 90,
-        waived: false,
-      },
+      { description: texts.items.webDevelopment, unitPrice: 660, quantity: 1, amount: 660, waived: false },
+      { description: texts.items.aiImageGeneration, unitPrice: 70, quantity: 1, amount: 70, waived: false },
+      { description: texts.items.basicDomain, unitPrice: 9.99, quantity: 1, amount: 9.99, waived: true },
+      { description: texts.items.basicHosting, unitPrice: 60, quantity: 1, amount: 60, waived: true },
+      { description: texts.items.ecommerceHosting, unitPrice: 90, quantity: 1, amount: 90, waived: false },
     ],
+    taxRate: 0,
+    discountAmount: 0,
   };
+
+  const invoiceData = data || defaultData;
+  const currencySymbol = invoiceData.currency === "USD" ? "$" : "€";
 
   const subtotal = invoiceData.items.reduce(
     (sum, item) => sum + (item.waived ? 0 : item.amount),
@@ -317,7 +324,7 @@ const Invoice = () => {
                 <p className="text-sm font-bold text-invoice-dark">{invoiceData.date}</p>
               </div>
               <div className="bg-invoice-dark rounded-lg py-2 px-3 text-center mt-4">
-                <p className="text-xl font-bold text-primary-foreground">€{subtotal.toFixed(2)}</p>
+                <p className="text-xl font-bold text-primary-foreground">{currencySymbol}{subtotal.toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -360,7 +367,7 @@ const Invoice = () => {
                       )}
                     </td>
                     <td className="py-4 text-sm text-right text-muted-foreground">
-                      €{item.unitPrice.toFixed(2)}
+                      {currencySymbol}{item.unitPrice.toFixed(2)}
                     </td>
                     <td className="py-4 text-sm text-center text-muted-foreground">
                       {item.quantity.toString().padStart(2, "0")}
@@ -368,10 +375,10 @@ const Invoice = () => {
                     <td className="py-4 text-sm text-right font-medium text-foreground">
                       {item.waived ? (
                         <span className="line-through text-muted-foreground">
-                          €{item.amount.toFixed(2)}
+                          {currencySymbol}{item.amount.toFixed(2)}
                         </span>
                       ) : (
-                        `€${item.amount.toFixed(2)}`
+                        `${currencySymbol}${item.amount.toFixed(2)}`
                       )}
                     </td>
                   </tr>
@@ -393,12 +400,12 @@ const Invoice = () => {
               {waivedTotal > 0 && (
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-muted-foreground">{texts.waivedServices}</span>
-                  <span className="text-invoice-coral font-medium">-€{waivedTotal.toFixed(2)}</span>
+                  <span className="text-invoice-coral font-medium">-{currencySymbol}{waivedTotal.toFixed(2)}</span>
                 </div>
               )}
               <div className="flex justify-between text-lg font-bold border-t border-invoice-dark/10 pt-3 mt-2">
                 <span className="text-foreground">{texts.total}</span>
-                <span className="text-invoice-dark">€{subtotal.toFixed(2)}</span>
+                <span className="text-invoice-dark">{currencySymbol}{subtotal.toFixed(2)}</span>
               </div>
             </div>
           </div>

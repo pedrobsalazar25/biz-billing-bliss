@@ -8,6 +8,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminLayout from "@/components/AdminLayout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import PublicInvoice from "./pages/PublicInvoice";
 import Dashboard from "./pages/admin/Dashboard";
 import Clients from "./pages/admin/Clients";
 import Invoices from "./pages/admin/Invoices";
@@ -25,6 +26,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/i/:slug" element={<PublicInvoice />} />
             <Route
               path="/admin"
               element={
