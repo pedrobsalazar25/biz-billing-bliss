@@ -181,7 +181,7 @@ export default function Invoices() {
       ) : (
         <div className="space-y-2">
           {invoices.map((inv) => (
-            <Card key={inv.id}>
+            <Card key={inv.id} className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => navigate(`/admin/invoices/${inv.id}`)}>
               <CardContent className="flex items-center justify-between py-3 px-4">
                 <div>
                   <p className="font-medium">{inv.invoice_number}</p>
