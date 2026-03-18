@@ -31,6 +31,7 @@ type InvoiceStatus = Database["public"]["Enums"]["invoice_status"];
 export default function Invoices() {
   const { user } = useAuth();
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [clientId, setClientId] = useState("");
   const [dueDate, setDueDate] = useState("");
