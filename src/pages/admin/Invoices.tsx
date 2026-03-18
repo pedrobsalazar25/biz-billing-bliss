@@ -22,7 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { Database } from "@/integrations/supabase/types";
 
 type InvoiceStatus = Database["public"]["Enums"]["invoice_status"];
