@@ -12,6 +12,7 @@ import PublicInvoice from "./pages/PublicInvoice";
 import Dashboard from "./pages/admin/Dashboard";
 import Clients from "./pages/admin/Clients";
 import Invoices from "./pages/admin/Invoices";
+import InvoiceDetail from "./pages/admin/InvoiceDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
