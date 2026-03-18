@@ -189,7 +189,7 @@ export default function Invoices() {
                     {(inv.clients as any)?.name ?? "No client"} · ${Number(inv.total).toFixed(2)}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                   <Select
                     value={inv.status}
                     onValueChange={(val) =>
