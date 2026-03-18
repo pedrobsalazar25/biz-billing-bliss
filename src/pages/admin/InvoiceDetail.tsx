@@ -197,16 +197,31 @@ export default function InvoiceDetail() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/admin/invoices")}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <div>
-          <h2 className="text-2xl font-bold">{invoice.invoice_number}</h2>
-          <p className="text-sm text-muted-foreground">
-            {(invoice.clients as any)?.name ?? "No client"} · {invoice.status}
-          </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/admin/invoices")}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div>
+            <h2 className="text-2xl font-bold">{invoice.invoice_number}</h2>
+            <p className="text-sm text-muted-foreground">
+              {(invoice.clients as any)?.name ?? "No client"} · {invoice.status}
+            </p>
+          </div>
         </div>
+        {invoice.public_share_slug && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const url = `${window.location.origin}/i/${invoice.public_share_slug}`;
+              navigator.clipboard.writeText(url);
+              toast.success("Public link copied to clipboard!");
+            }}
+          >
+            <Copy className="h-4 w-4 mr-1" /> Copy Public Link
+          </Button>
+        )}
       </div>
 
       <Card>
