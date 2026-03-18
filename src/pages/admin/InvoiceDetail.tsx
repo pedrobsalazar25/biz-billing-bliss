@@ -210,17 +210,22 @@ export default function InvoiceDetail() {
           </div>
         </div>
         {invoice.public_share_slug && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const url = `${window.location.origin}/i/${invoice.public_share_slug}`;
-              navigator.clipboard.writeText(url);
-              toast.success("Public link copied to clipboard!");
-            }}
-          >
-            <Copy className="h-4 w-4 mr-1" /> Copy Public Link
-          </Button>
+          <div className="flex items-center gap-2">
+            <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate max-w-[300px]">
+              {`${window.location.origin}/i/${invoice.public_share_slug}`}
+            </code>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-7 w-7 shrink-0"
+              onClick={() => {
+                navigator.clipboard.writeText(`${window.location.origin}/i/${invoice.public_share_slug}`);
+                toast.success("Public link copied!");
+              }}
+            >
+              <Copy className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         )}
       </div>
 
