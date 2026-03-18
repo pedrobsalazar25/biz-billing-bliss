@@ -39,6 +39,7 @@ const App = () => (
               <Route index element={<Dashboard />} />
               <Route path="clients" element={<Clients />} />
               <Route path="invoices" element={<Invoices />} />
+              <Route path="invoices/:id" element={<InvoiceDetail />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

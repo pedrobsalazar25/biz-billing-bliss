@@ -209,12 +209,14 @@ export default function Invoices() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       if (confirm("Delete this invoice?")) deleteMutation.mutate(inv.id);
                     }}
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </div>
               </CardContent>
             </Card>
