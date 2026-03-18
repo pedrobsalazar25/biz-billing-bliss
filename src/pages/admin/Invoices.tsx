@@ -22,7 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { Database } from "@/integrations/supabase/types";
 
 type InvoiceStatus = Database["public"]["Enums"]["invoice_status"];
@@ -30,6 +31,7 @@ type InvoiceStatus = Database["public"]["Enums"]["invoice_status"];
 export default function Invoices() {
   const { user } = useAuth();
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [clientId, setClientId] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -179,7 +181,7 @@ export default function Invoices() {
       ) : (
         <div className="space-y-2">
           {invoices.map((inv) => (
-            <Card key={inv.id}>
+            <Card key={inv.id} className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => navigate(`/admin/invoices/${inv.id}`)}>
               <CardContent className="flex items-center justify-between py-3 px-4">
                 <div>
                   <p className="font-medium">{inv.invoice_number}</p>
@@ -187,7 +189,7 @@ export default function Invoices() {
                     {(inv.clients as any)?.name ?? "No client"} · ${Number(inv.total).toFixed(2)}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                   <Select
                     value={inv.status}
                     onValueChange={(val) =>
@@ -207,12 +209,14 @@ export default function Invoices() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       if (confirm("Delete this invoice?")) deleteMutation.mutate(inv.id);
                     }}
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </div>
               </CardContent>
             </Card>
