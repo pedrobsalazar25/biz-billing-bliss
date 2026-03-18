@@ -43,6 +43,7 @@ const emptyForm: LineItemForm = { description: "", quantity: "1", unit_price: "0
 export default function InvoiceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const qc = useQueryClient();
 
   const [dialogOpen, setDialogOpen] = useState(false);
