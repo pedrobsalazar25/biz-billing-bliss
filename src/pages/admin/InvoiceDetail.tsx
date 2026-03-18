@@ -223,7 +223,36 @@ export default function InvoiceDetail() {
                 <DialogTitle>{editingId ? "Edit Product" : "Add Product"}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
+                {!editingId && products.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Pick from saved products</Label>
+                    <Select
+                      onValueChange={(productId) => {
+                        const product = products.find((p) => p.id === productId);
+                        if (product) {
+                          setForm({
+                            ...form,
+                            description: product.name + (product.description ? ` — ${product.description}` : ""),
+                            unit_price: String(product.unit_price),
+                          });
+                        }
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a product..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {products.map((p) => (
+                          <SelectItem key={p.id} value={p.id}>
+                            {p.name} — €{Number(p.unit_price).toFixed(2)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
                 <div className="space-y-2">
+
                   <Label>Description</Label>
                   <Input
                     value={form.description}
