@@ -22,7 +22,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ArrowLeft, Plus, Pencil, Trash2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface LineItemForm {
   description: string;
