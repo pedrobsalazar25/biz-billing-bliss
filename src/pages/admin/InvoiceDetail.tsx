@@ -78,6 +78,18 @@ export default function InvoiceDetail() {
     enabled: !!id,
   });
 
+  const { data: products = [] } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("name");
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const addMutation = useMutation({
     mutationFn: async (f: LineItemForm) => {
       const maxSort = items.length > 0 ? Math.max(...items.map((i) => i.sort_order)) + 1 : 0;
