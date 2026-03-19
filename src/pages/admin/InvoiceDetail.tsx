@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -29,16 +30,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Plus, Pencil, Trash2, Link, Copy } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Copy } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 interface LineItemForm {
   description: string;
   quantity: string;
   unit_price: string;
+  waived: boolean;
 }
 
-const emptyForm: LineItemForm = { description: "", quantity: "1", unit_price: "0" };
+const emptyForm: LineItemForm = { description: "", quantity: "1", unit_price: "0", waived: false };
 
 export default function InvoiceDetail() {
   const { id } = useParams<{ id: string }>();
@@ -99,7 +101,8 @@ export default function InvoiceDetail() {
         quantity: parseFloat(f.quantity) || 1,
         unit_price: parseFloat(f.unit_price) || 0,
         sort_order: maxSort,
-      });
+        waived: f.waived,
+      } as any);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -120,7 +123,8 @@ export default function InvoiceDetail() {
           description: f.description,
           quantity: parseFloat(f.quantity) || 1,
           unit_price: parseFloat(f.unit_price) || 0,
-        })
+          waived: f.waived,
+        } as any)
         .eq("id", itemId);
       if (error) throw error;
     },
@@ -166,6 +170,7 @@ export default function InvoiceDetail() {
       description: item.description,
       quantity: String(item.quantity),
       unit_price: String(item.unit_price),
+      waived: (item as any).waived ?? false,
     });
     setDialogOpen(true);
   };
@@ -272,7 +277,6 @@ export default function InvoiceDetail() {
                   </div>
                 )}
                 <div className="space-y-2">
-
                   <Label>Description</Label>
                   <Input
                     value={form.description}
@@ -303,9 +307,21 @@ export default function InvoiceDetail() {
                     />
                   </div>
                 </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="waived"
+                    checked={form.waived}
+                    onCheckedChange={(checked) => setForm({ ...form, waived: !!checked })}
+                  />
+                  <Label htmlFor="waived" className="text-sm font-normal">
+                    Waive this service (included at no charge)
+                  </Label>
+                </div>
                 <p className="text-sm text-muted-foreground">
                   Amount: {currencySymbol}
-                  {((parseFloat(form.quantity) || 0) * (parseFloat(form.unit_price) || 0)).toFixed(2)}
+                  {form.waived
+                    ? "0.00 (waived)"
+                    : ((parseFloat(form.quantity) || 0) * (parseFloat(form.unit_price) || 0)).toFixed(2)}
                 </p>
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? "Saving..." : editingId ? "Update Product" : "Add Product"}
@@ -332,8 +348,15 @@ export default function InvoiceDetail() {
               </TableHeader>
               <TableBody>
                 {items.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.description}</TableCell>
+                  <TableRow key={item.id} className={(item as any).waived ? "opacity-60" : ""}>
+                    <TableCell>
+                      {item.description}
+                      {(item as any).waived && (
+                        <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">
+                          Waived
+                        </span>
+                      )}
+                    </TableCell>
                     <TableCell className="text-right">{Number(item.quantity)}</TableCell>
                     <TableCell className="text-right">
                       {currencySymbol}{Number(item.unit_price).toFixed(2)}

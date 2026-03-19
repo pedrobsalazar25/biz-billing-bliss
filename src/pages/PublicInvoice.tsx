@@ -71,7 +71,7 @@ const PublicInvoice = () => {
           unitPrice: Number(li.unit_price),
           quantity: Number(li.quantity),
           amount: Number(li.amount),
-          waived: Number(li.unit_price) > 0 && Number(li.amount) === 0,
+          waived: (li as any).waived ?? (Number(li.unit_price) > 0 && Number(li.amount) === 0),
         })),
         taxRate: Number(invoice.tax_rate),
         discountAmount: Number(invoice.discount_amount),
