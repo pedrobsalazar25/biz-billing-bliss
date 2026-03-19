@@ -138,6 +138,7 @@ export type Database = {
           quantity: number
           sort_order: number
           unit_price: number
+          waived: boolean
         }
         Insert: {
           amount?: number
@@ -148,6 +149,7 @@ export type Database = {
           quantity?: number
           sort_order?: number
           unit_price?: number
+          waived?: boolean
         }
         Update: {
           amount?: number
@@ -158,6 +160,7 @@ export type Database = {
           quantity?: number
           sort_order?: number
           unit_price?: number
+          waived?: boolean
         }
         Relationships: [
           {
