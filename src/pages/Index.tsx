@@ -1,7 +1,7 @@
-import Invoice from "@/components/Invoice";
+import { Navigate } from "react-router-dom";
 
 const Index = () => {
-  return <Invoice />;
+  return <Navigate to="/admin" replace />;
 };
 
 export default Index;
