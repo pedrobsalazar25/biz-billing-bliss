@@ -355,54 +355,83 @@ export default function InvoiceDetail() {
               No products yet. Click "Add Product" to get started.
             </p>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Description</TableHead>
-                  <TableHead className="text-right w-24">Qty</TableHead>
-                  <TableHead className="text-right w-32">Unit Price</TableHead>
-                  <TableHead className="text-right w-32">Amount</TableHead>
-                  <TableHead className="w-20" />
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {items.map((item) => (
-                  <TableRow key={item.id} className={(item as any).waived ? "opacity-60" : ""}>
-                    <TableCell>
-                      {item.description}
-                      {(item as any).waived && (
-                        <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">
-                          Waived
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">{Number(item.quantity)}</TableCell>
-                    <TableCell className="text-right">
-                      {currencySymbol}{Number(item.unit_price).toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-right font-medium">
-                      {currencySymbol}{Number(item.amount).toFixed(2)}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-1 justify-end">
-                        <Button variant="ghost" size="icon" onClick={() => openEdit(item)}>
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => {
-                            if (confirm("Remove this product?")) deleteMutation.mutate(item.id);
-                          }}
-                        >
-                          <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                        </Button>
-                      </div>
-                    </TableCell>
+            <div className="space-y-2 md:hidden">
+              {items.map((item) => (
+                <div key={item.id} className={`border rounded-lg p-3 ${(item as any).waived ? "opacity-60" : ""}`}>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate">
+                        {item.description}
+                        {(item as any).waived && (
+                          <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">Waived</span>
+                        )}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {Number(item.quantity)} × {currencySymbol}{Number(item.unit_price).toFixed(2)} = <span className="font-medium text-foreground">{currencySymbol}{Number(item.amount).toFixed(2)}</span>
+                      </p>
+                    </div>
+                    <div className="flex gap-1 shrink-0">
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(item)}>
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { if (confirm("Remove this product?")) deleteMutation.mutate(item.id); }}>
+                        <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Description</TableHead>
+                    <TableHead className="text-right w-24">Qty</TableHead>
+                    <TableHead className="text-right w-32">Unit Price</TableHead>
+                    <TableHead className="text-right w-32">Amount</TableHead>
+                    <TableHead className="w-20" />
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {items.map((item) => (
+                    <TableRow key={item.id} className={(item as any).waived ? "opacity-60" : ""}>
+                      <TableCell>
+                        {item.description}
+                        {(item as any).waived && (
+                          <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">
+                            Waived
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">{Number(item.quantity)}</TableCell>
+                      <TableCell className="text-right">
+                        {currencySymbol}{Number(item.unit_price).toFixed(2)}
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        {currencySymbol}{Number(item.amount).toFixed(2)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-1 justify-end">
+                          <Button variant="ghost" size="icon" onClick={() => openEdit(item)}>
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              if (confirm("Remove this product?")) deleteMutation.mutate(item.id);
+                            }}
+                          >
+                            <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
 
           {items.length > 0 && (
