@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { Upload, Download } from "lucide-react";
 import { toast } from "sonner";
 
 interface CsvUploadButtonProps {
   onParsed: (rows: Record<string, string>[]) => Promise<void>;
   label?: string;
+  sampleHeaders?: string[];
+  sampleRow?: string[];
 }
 
 function parseCsv(text: string): Record<string, string>[] {
@@ -28,7 +30,7 @@ function parseCsv(text: string): Record<string, string>[] {
   });
 }
 
-export default function CsvUploadButton({ onParsed, label = "Upload CSV" }: CsvUploadButtonProps) {
+export default function CsvUploadButton({ onParsed, label = "Upload CSV", sampleHeaders, sampleRow }: CsvUploadButtonProps) {
   const ref = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
 
@@ -48,6 +50,18 @@ export default function CsvUploadButton({ onParsed, label = "Upload CSV" }: CsvU
     }
   };
 
+  const downloadSample = () => {
+    if (!sampleHeaders) return;
+    const csv = [sampleHeaders.join(","), ...(sampleRow ? [sampleRow.join(",")] : [])].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sample.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <>
       <input
@@ -57,9 +71,16 @@ export default function CsvUploadButton({ onParsed, label = "Upload CSV" }: CsvU
         className="hidden"
         onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
       />
-      <Button variant="outline" size="sm" disabled={loading} onClick={() => ref.current?.click()}>
-        <Upload className="h-4 w-4 mr-1" /> {loading ? "Importing..." : label}
-      </Button>
+      <div className="flex items-center gap-1">
+        <Button variant="outline" size="sm" disabled={loading} onClick={() => ref.current?.click()}>
+          <Upload className="h-4 w-4 mr-1" /> {loading ? "Importing..." : label}
+        </Button>
+        {sampleHeaders && (
+          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground px-2" onClick={downloadSample}>
+            <Download className="h-3.5 w-3.5 mr-1" /> Sample
+          </Button>
+        )}
+      </div>
     </>
   );
 }
