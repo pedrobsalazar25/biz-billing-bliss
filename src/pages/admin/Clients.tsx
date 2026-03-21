@@ -105,6 +105,8 @@ export default function Clients() {
         <div className="flex items-center gap-2">
           <CsvUploadButton
             label="Upload CSV"
+            sampleHeaders={["name", "email", "phone", "company"]}
+            sampleRow={["John Doe", "john@example.com", "+34 600 000 000", "Acme Corp"]}
             onParsed={async (rows) => {
               const payload = rows.map((r) => ({
                 user_id: user!.id,

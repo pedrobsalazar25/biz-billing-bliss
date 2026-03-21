@@ -103,6 +103,8 @@ export default function Products() {
         <div className="flex items-center gap-2">
           <CsvUploadButton
             label="Upload CSV"
+            sampleHeaders={["name", "description", "unit_price"]}
+            sampleRow={["Web Design", "Full website design service", "500"]}
             onParsed={async (rows) => {
               const payload = rows.map((r) => ({
                 user_id: user!.id,
