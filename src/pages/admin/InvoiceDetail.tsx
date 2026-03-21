@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Plus, Pencil, Trash2, Copy } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Copy, Send, MessageCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 interface LineItemForm {
@@ -214,24 +214,41 @@ export default function InvoiceDetail() {
             </p>
           </div>
         </div>
-        {invoice.public_share_slug && (
-          <div className="flex items-center gap-2">
-            <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate max-w-[300px]">
-              {`${window.location.origin}/i/${invoice.public_share_slug}`}
-            </code>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-7 w-7 shrink-0"
-              onClick={() => {
-                navigator.clipboard.writeText(`${window.location.origin}/i/${invoice.public_share_slug}`);
-                toast.success("Public link copied!");
-              }}
-            >
-              <Copy className="h-3.5 w-3.5" />
-            </Button>
-          </div>
-        )}
+        {invoice.public_share_slug && (() => {
+          const publicUrl = `${window.location.origin}/i/${invoice.public_share_slug}`;
+          const clientName = (invoice.clients as any)?.name ?? "Client";
+          const emailSubject = encodeURIComponent(`Invoice ${invoice.invoice_number}`);
+          const emailBody = encodeURIComponent(`Hi ${clientName},\n\nPlease find your invoice here:\n${publicUrl}\n\nBest regards,\nPedro Barrios`);
+          const waMsg = encodeURIComponent(`Hi ${clientName}, here is your invoice ${invoice.invoice_number}:\n${publicUrl}`);
+          return (
+            <div className="flex items-center gap-2 flex-wrap">
+              <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate max-w-[300px]">
+                {publicUrl}
+              </code>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-7 w-7 shrink-0"
+                onClick={() => {
+                  navigator.clipboard.writeText(publicUrl);
+                  toast.success("Public link copied!");
+                }}
+              >
+                <Copy className="h-3.5 w-3.5" />
+              </Button>
+              <Button variant="outline" size="sm" className="h-7 shrink-0" asChild>
+                <a href={`mailto:?subject=${emailSubject}&body=${emailBody}`} target="_blank" rel="noopener noreferrer">
+                  <Send className="h-3.5 w-3.5 mr-1" /> Email
+                </a>
+              </Button>
+              <Button variant="outline" size="sm" className="h-7 shrink-0 text-green-600 border-green-600 hover:bg-green-50" asChild>
+                <a href={`https://wa.me/?text=${waMsg}`} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="h-3.5 w-3.5 mr-1" /> WhatsApp
+                </a>
+              </Button>
+            </div>
+          );
+        })()}
       </div>
 
       <Card>
