@@ -6,6 +6,8 @@ import { toast } from "sonner";
 interface CsvUploadButtonProps {
   onParsed: (rows: Record<string, string>[]) => Promise<void>;
   label?: string;
+  sampleHeaders?: string[];
+  sampleRow?: string[];
 }
 
 function parseCsv(text: string): Record<string, string>[] {
