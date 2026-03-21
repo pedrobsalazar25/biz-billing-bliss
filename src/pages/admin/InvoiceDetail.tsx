@@ -355,6 +355,7 @@ export default function InvoiceDetail() {
               No products yet. Click "Add Product" to get started.
             </p>
           ) : (
+            <>
             <div className="space-y-2 md:hidden">
               {items.map((item) => (
                 <div key={item.id} className={`border rounded-lg p-3 ${(item as any).waived ? "opacity-60" : ""}`}>
