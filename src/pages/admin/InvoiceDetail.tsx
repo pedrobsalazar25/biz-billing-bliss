@@ -202,14 +202,14 @@ export default function InvoiceDetail() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate("/admin/invoices")}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div>
-            <h2 className="text-2xl font-bold">{invoice.invoice_number}</h2>
-            <p className="text-sm text-muted-foreground">
+          <div className="min-w-0">
+            <h2 className="text-xl md:text-2xl font-bold truncate">{invoice.invoice_number}</h2>
+            <p className="text-sm text-muted-foreground truncate">
               {(invoice.clients as any)?.name ?? "No client"} · {invoice.status}
             </p>
           </div>
@@ -221,31 +221,33 @@ export default function InvoiceDetail() {
           const emailBody = encodeURIComponent(`Hi ${clientName},\n\nPlease find your invoice here:\n${publicUrl}\n\nBest regards,\nPedro Barrios`);
           const waMsg = encodeURIComponent(`Hi ${clientName}, here is your invoice ${invoice.invoice_number}:\n${publicUrl}`);
           return (
-            <div className="flex items-center gap-2 flex-wrap">
-              <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate max-w-[300px]">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+              <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate max-w-full sm:max-w-[300px] block">
                 {publicUrl}
               </code>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-7 w-7 shrink-0"
-                onClick={() => {
-                  navigator.clipboard.writeText(publicUrl);
-                  toast.success("Public link copied!");
-                }}
-              >
-                <Copy className="h-3.5 w-3.5" />
-              </Button>
-              <Button variant="outline" size="sm" className="h-7 shrink-0" asChild>
-                <a href={`mailto:?subject=${emailSubject}&body=${emailBody}`} target="_blank" rel="noopener noreferrer">
-                  <Send className="h-3.5 w-3.5 mr-1" /> Email
-                </a>
-              </Button>
-              <Button variant="outline" size="sm" className="h-7 shrink-0 text-green-600 border-green-600 hover:bg-green-50" asChild>
-                <a href={`https://wa.me/?text=${waMsg}`} target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="h-3.5 w-3.5 mr-1" /> WhatsApp
-                </a>
-              </Button>
+              <div className="flex items-center gap-1.5">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-7 w-7 shrink-0"
+                  onClick={() => {
+                    navigator.clipboard.writeText(publicUrl);
+                    toast.success("Public link copied!");
+                  }}
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                </Button>
+                <Button variant="outline" size="sm" className="h-7 shrink-0" asChild>
+                  <a href={`mailto:?subject=${emailSubject}&body=${emailBody}`} target="_blank" rel="noopener noreferrer">
+                    <Send className="h-3.5 w-3.5 mr-1" /> Email
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" className="h-7 shrink-0 text-green-600 border-green-600 hover:bg-green-50" asChild>
+                  <a href={`https://wa.me/?text=${waMsg}`} target="_blank" rel="noopener noreferrer">
+                    <MessageCircle className="h-3.5 w-3.5 mr-1" /> WhatsApp
+                  </a>
+                </Button>
+              </div>
             </div>
           );
         })()}
