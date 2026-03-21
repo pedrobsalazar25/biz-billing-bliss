@@ -100,14 +100,31 @@ export default function Clients() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="text-2xl font-bold">Clients</h2>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" onClick={openNew}>
-              <Plus className="h-4 w-4 mr-1" /> Add Client
-            </Button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          <CsvUploadButton
+            label="Upload CSV"
+            onParsed={async (rows) => {
+              const payload = rows.map((r) => ({
+                user_id: user!.id,
+                name: r["name"] || r["Name"] || "",
+                email: r["email"] || r["Email"] || null,
+                phone: r["phone"] || r["Phone"] || null,
+                company: r["company"] || r["Company"] || null,
+              })).filter((c) => c.name);
+              if (!payload.length) throw new Error("No valid rows found. Ensure CSV has a 'name' column.");
+              const { error } = await supabase.from("clients").insert(payload);
+              if (error) throw error;
+              qc.invalidateQueries({ queryKey: ["clients"] });
+            }}
+          />
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" onClick={openNew}>
+                <Plus className="h-4 w-4 mr-1" /> Add Client
+              </Button>
+            </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{editId ? "Edit Client" : "New Client"}</DialogTitle>
