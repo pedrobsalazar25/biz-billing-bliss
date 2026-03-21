@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Plus, Pencil, Trash2, Copy } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Copy, Send, MessageCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 interface LineItemForm {
