@@ -164,6 +164,7 @@ export default function Products() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {isLoading ? (
