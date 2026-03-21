@@ -433,6 +433,7 @@ export default function InvoiceDetail() {
                 </TableBody>
               </Table>
             </div>
+            </>
           )}
 
           {items.length > 0 && (
