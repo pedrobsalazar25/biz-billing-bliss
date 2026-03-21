@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2 } from "lucide-react";
+import CsvUploadButton from "@/components/CsvUploadButton";
 
 interface ProductForm {
   name: string;
@@ -97,14 +98,30 @@ export default function Products() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="text-2xl font-bold">Products</h2>
-        <Dialog open={open} onOpenChange={(v) => { if (!v) closeDialog(); else setOpen(true); }}>
-          <DialogTrigger asChild>
-            <Button size="sm">
-              <Plus className="h-4 w-4 mr-1" /> New Product
-            </Button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          <CsvUploadButton
+            label="Upload CSV"
+            onParsed={async (rows) => {
+              const payload = rows.map((r) => ({
+                user_id: user!.id,
+                name: r["name"] || r["Name"] || "",
+                description: r["description"] || r["Description"] || null,
+                unit_price: parseFloat(r["unit_price"] || r["Unit Price"] || r["price"] || "0") || 0,
+              })).filter((p) => p.name);
+              if (!payload.length) throw new Error("No valid rows found. Ensure CSV has a 'name' column.");
+              const { error } = await supabase.from("products").insert(payload);
+              if (error) throw error;
+              qc.invalidateQueries({ queryKey: ["products"] });
+            }}
+          />
+          <Dialog open={open} onOpenChange={(v) => { if (!v) closeDialog(); else setOpen(true); }}>
+            <DialogTrigger asChild>
+              <Button size="sm">
+                <Plus className="h-4 w-4 mr-1" /> New Product
+              </Button>
+            </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{editingId ? "Edit Product" : "New Product"}</DialogTitle>
@@ -147,6 +164,7 @@ export default function Products() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {isLoading ? (
