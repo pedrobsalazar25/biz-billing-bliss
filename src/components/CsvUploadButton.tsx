@@ -30,7 +30,7 @@ function parseCsv(text: string): Record<string, string>[] {
   });
 }
 
-export default function CsvUploadButton({ onParsed, label = "Upload CSV" }: CsvUploadButtonProps) {
+export default function CsvUploadButton({ onParsed, label = "Upload CSV", sampleHeaders, sampleRow }: CsvUploadButtonProps) {
   const ref = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
 
