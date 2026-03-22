@@ -299,10 +299,14 @@ const Invoice = ({ data }: InvoiceProps) => {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-primary-foreground/80 text-sm hidden md:block">
-                Pedro Barrios
+                {invoiceData.from.name}
               </span>
               <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary-foreground flex items-center justify-center overflow-hidden">
-                <img src={logo} alt="PB Logo" className="w-full h-full object-cover" />
+                {invoiceData.from.logoUrl ? (
+                  <img src={invoiceData.from.logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                ) : (
+                  <img src={logo} alt="Logo" className="w-full h-full object-cover" />
+                )}
               </div>
             </div>
           </div>
