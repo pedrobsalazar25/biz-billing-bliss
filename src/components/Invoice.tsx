@@ -79,6 +79,7 @@ export interface InvoiceData {
     name: string;
     email: string;
     phone: string;
+    logoUrl?: string;
   };
   to: {
     name: string;
