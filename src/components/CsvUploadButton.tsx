@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Download } from "lucide-react";
+import { Upload, Download, FileUp } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface CsvUploadButtonProps {
   onParsed: (rows: Record<string, string>[]) => Promise<void>;
@@ -33,6 +34,7 @@ function parseCsv(text: string): Record<string, string>[] {
 export default function CsvUploadButton({ onParsed, label = "Upload CSV", sampleHeaders, sampleRow }: CsvUploadButtonProps) {
   const ref = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
 
   const handleFile = async (file: File) => {
     setLoading(true);
@@ -50,6 +52,21 @@ export default function CsvUploadButton({ onParsed, label = "Upload CSV", sample
     }
   };
 
+  const onDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.name.endsWith(".csv")) handleFile(file);
+    else toast.error("Please drop a .csv file");
+  }, []);
+
+  const onDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  }, []);
+
+  const onDragLeave = useCallback(() => setDragOver(false), []);
+
   const downloadSample = () => {
     if (!sampleHeaders) return;
     const csv = [sampleHeaders.join(","), ...(sampleRow ? [sampleRow.join(",")] : [])].join("\n");
@@ -63,7 +80,7 @@ export default function CsvUploadButton({ onParsed, label = "Upload CSV", sample
   };
 
   return (
-    <>
+    <div className="space-y-2">
       <input
         ref={ref}
         type="file"
@@ -71,16 +88,33 @@ export default function CsvUploadButton({ onParsed, label = "Upload CSV", sample
         className="hidden"
         onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
       />
-      <div className="flex items-center gap-1">
-        <Button variant="outline" size="sm" disabled={loading} onClick={() => ref.current?.click()}>
-          <Upload className="h-4 w-4 mr-1" /> {loading ? "Importing..." : label}
-        </Button>
-        {sampleHeaders && (
-          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground px-2" onClick={downloadSample}>
-            <Download className="h-3.5 w-3.5 mr-1" /> Sample
-          </Button>
+      <div
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onClick={() => ref.current?.click()}
+        className={cn(
+          "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 cursor-pointer transition-colors",
+          dragOver
+            ? "border-primary bg-primary/5"
+            : "border-border hover:border-primary/50 hover:bg-muted/50"
         )}
+      >
+        {loading ? (
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+        ) : (
+          <FileUp className="h-8 w-8 text-muted-foreground" />
+        )}
+        <p className="text-sm font-medium text-foreground">
+          {loading ? "Importing..." : "Drag & drop a CSV file here"}
+        </p>
+        <p className="text-xs text-muted-foreground">or click to browse</p>
       </div>
-    </>
+      {sampleHeaders && (
+        <Button variant="ghost" size="sm" className="text-xs text-muted-foreground px-2" onClick={(e) => { e.stopPropagation(); downloadSample(); }}>
+          <Download className="h-3.5 w-3.5 mr-1" /> Download sample CSV
+        </Button>
+      )}
+    </div>
   );
 }
