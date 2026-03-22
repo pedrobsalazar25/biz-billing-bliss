@@ -79,6 +79,7 @@ export interface InvoiceData {
     name: string;
     email: string;
     phone: string;
+    logoUrl?: string;
   };
   to: {
     name: string;
@@ -107,21 +108,17 @@ const Invoice = ({ data }: InvoiceProps) => {
     date: language === "en" ? "January 29, 2025" : "29 de Enero de 2025",
     currency: "EUR",
     from: {
-      name: "Pedro Barrios",
-      email: "pedrorafaelbarriossalazar@gmail.com",
-      phone: "+34 604 06 58 49",
+      name: "Your Business",
+      email: "email@example.com",
+      phone: "+1 000 000 0000",
     },
     to: {
-      name: "Daniel Hidalgo",
-      company: "HB BIKE Tours",
-      phone: "+34 631 08 18 19",
+      name: "Client Name",
+      company: "Client Company",
+      phone: "+1 000 000 0000",
     },
     items: [
-      { description: "Web Development Services — Servicios de Desarrollo Web", unitPrice: 660, quantity: 1, amount: 660, waived: false },
-      { description: "AI Image Generation & Sizing — Generación y Dimensionado de Imágenes con IA", unitPrice: 70, quantity: 1, amount: 70, waived: false },
-      { description: "Basic Website Domain (1 year) — Dominio Web Básico (1 año)", unitPrice: 9.99, quantity: 1, amount: 9.99, waived: true },
-      { description: "Basic Hosting (1 year) — Hosting Básico (1 año)", unitPrice: 60, quantity: 1, amount: 60, waived: true },
-      { description: "Extra Hosting for E-commerce Platform — Hosting Extra para Plataforma E-commerce", unitPrice: 90, quantity: 1, amount: 90, waived: false },
+      { description: "Web Development Services", unitPrice: 660, quantity: 1, amount: 660, waived: false },
     ],
     taxRate: 0,
     discountAmount: 0,
@@ -298,10 +295,14 @@ const Invoice = ({ data }: InvoiceProps) => {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-primary-foreground/80 text-sm hidden md:block">
-                Pedro Barrios
+                {invoiceData.from.name}
               </span>
               <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary-foreground flex items-center justify-center overflow-hidden">
-                <img src={logo} alt="PB Logo" className="w-full h-full object-cover" />
+                {invoiceData.from.logoUrl ? (
+                  <img src={invoiceData.from.logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                ) : (
+                  <img src={logo} alt="Logo" className="w-full h-full object-cover" />
+                )}
               </div>
             </div>
           </div>
@@ -449,22 +450,26 @@ const Invoice = ({ data }: InvoiceProps) => {
               {texts.from}
             </p>
             <p className="text-lg font-bold text-primary-foreground">
-              Pedro Barrios
+              {invoiceData.from.name}
             </p>
           </div>
           <div className="flex flex-col md:flex-row gap-4 md:gap-6 text-sm text-primary-foreground/90">
-            <div className="flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              pedrorafaelbarriossalazar@gmail.com
-            </div>
-            <div className="flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              +34 604 06 58 49
-            </div>
+            {invoiceData.from.email && (
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                {invoiceData.from.email}
+              </div>
+            )}
+            {invoiceData.from.phone && (
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                {invoiceData.from.phone}
+              </div>
+            )}
           </div>
         </div>
       </div>
