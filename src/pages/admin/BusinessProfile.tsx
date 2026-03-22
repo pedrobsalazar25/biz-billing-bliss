@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Building2, Save } from "lucide-react";
+import { Building2, Save, Upload, X } from "lucide-react";
 
 interface ProfileForm {
   business_name: string;
@@ -41,6 +41,9 @@ export default function BusinessProfile() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [form, setForm] = useState<ProfileForm>(emptyForm);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["businessProfile"],
@@ -70,8 +73,53 @@ export default function BusinessProfile() {
         country: profile.country ?? "",
         invoice_prefix: profile.invoice_prefix ?? "INV-",
       });
+      if (profile.logo_url) setLogoPreview(profile.logo_url);
     }
   }, [profile]);
+
+  const uploadLogo = async (file: File) => {
+    if (!user) return;
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `${user.id}/logo.${ext}`;
+
+      const { error: uploadErr } = await supabase.storage
+        .from("logos")
+        .upload(path, file, { upsert: true });
+      if (uploadErr) throw uploadErr;
+
+      const { data: urlData } = supabase.storage.from("logos").getPublicUrl(path);
+      const logoUrl = urlData.publicUrl + "?t=" + Date.now(); // cache bust
+
+      // Save logo_url to profile
+      if (profile) {
+        await supabase.from("business_profiles").update({ logo_url: logoUrl }).eq("id", profile.id);
+      } else {
+        await supabase.from("business_profiles").insert({
+          user_id: user.id,
+          business_name: form.business_name || "My Business",
+          logo_url: logoUrl,
+        });
+      }
+
+      setLogoPreview(logoUrl);
+      qc.invalidateQueries({ queryKey: ["businessProfile"] });
+      toast.success("Logo uploaded");
+    } catch (err: any) {
+      toast.error(err.message || "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeLogo = async () => {
+    if (!profile) return;
+    await supabase.from("business_profiles").update({ logo_url: null }).eq("id", profile.id);
+    setLogoPreview(null);
+    qc.invalidateQueries({ queryKey: ["businessProfile"] });
+    toast.success("Logo removed");
+  };
 
   const saveMutation = useMutation({
     mutationFn: async () => {
@@ -119,6 +167,56 @@ export default function BusinessProfile() {
       </div>
 
       <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(); }} className="space-y-6">
+        {/* Logo Upload */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Company Logo</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) uploadLogo(f);
+              }}
+            />
+            <div className="flex items-center gap-4">
+              {logoPreview ? (
+                <div className="relative">
+                  <img
+                    src={logoPreview}
+                    alt="Logo"
+                    className="w-20 h-20 rounded-lg object-cover border border-border"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeLogo}
+                    className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-0.5"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onClick={() => fileRef.current?.click()}
+                  className="w-20 h-20 rounded-lg border-2 border-dashed border-border hover:border-primary/50 flex items-center justify-center cursor-pointer transition-colors"
+                >
+                  <Upload className="h-6 w-6 text-muted-foreground" />
+                </div>
+              )}
+              <div>
+                <Button type="button" variant="outline" size="sm" disabled={uploading} onClick={() => fileRef.current?.click()}>
+                  {uploading ? "Uploading..." : logoPreview ? "Change Logo" : "Upload Logo"}
+                </Button>
+                <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 2MB. Shown on invoices.</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Company Details</CardTitle>
