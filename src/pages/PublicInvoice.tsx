@@ -60,6 +60,7 @@ const PublicInvoice = () => {
           name: business?.business_name || "",
           email: business?.email || "",
           phone: business?.phone || "",
+          logoUrl: business?.logo_url || undefined,
         },
         to: {
           name: client?.name || "",
