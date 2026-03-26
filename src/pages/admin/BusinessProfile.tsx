@@ -154,14 +154,61 @@ export default function BusinessProfile() {
 
   const set = (key: keyof ProfileForm, value: string) => setForm((f) => ({ ...f, [key]: value }));
 
+  const isNewUser = !profile;
+
+  const completedSteps = [
+    !!form.business_name,
+    !!(form.email || form.phone),
+    !!(form.address_line1 && form.city),
+    !!logoPreview,
+  ];
+  const stepsTotal = completedSteps.length;
+  const stepsDone = completedSteps.filter(Boolean).length;
+
   if (isLoading) return <p className="text-sm text-muted-foreground">Loading...</p>;
 
   return (
     <div className="space-y-6 max-w-2xl">
+      {isNewUser && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="pt-6">
+            <h2 className="text-xl font-bold mb-1">👋 Welcome to your invoicing dashboard!</h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Let's get your business profile set up. This info will appear on every invoice you send.
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+                <div
+                  className="h-full bg-primary rounded-full transition-all duration-500"
+                  style={{ width: `${(stepsDone / stepsTotal) * 100}%` }}
+                />
+              </div>
+              <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                {stepsDone}/{stepsTotal} complete
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
+              {["Business name", "Contact info", "Address", "Logo"].map((label, i) => (
+                <div
+                  key={label}
+                  className={`text-xs rounded-md px-2 py-1.5 text-center font-medium ${
+                    completedSteps[i]
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {completedSteps[i] ? "✓ " : ""}{label}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="flex items-center gap-3">
         <Building2 className="h-6 w-6 text-primary" />
         <div>
-          <h2 className="text-2xl font-bold">Business Profile</h2>
+          <h2 className="text-2xl font-bold">{isNewUser ? "Set Up Your Business" : "Business Profile"}</h2>
           <p className="text-sm text-muted-foreground">Your company information shown on invoices</p>
         </div>
       </div>
