@@ -1,11 +1,74 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { FileText, Users, DollarSign } from "lucide-react";
+import { FileText, Users, DollarSign, CheckCircle2, Circle, ArrowRight } from "lucide-react";
+
+function GettingStarted({
+  hasProfile,
+  hasClient,
+  hasSentInvoice,
+}: {
+  hasProfile: boolean;
+  hasClient: boolean;
+  hasSentInvoice: boolean;
+}) {
+  const steps = [
+    { done: hasProfile, label: "Complete your business profile", link: "/admin/profile" },
+    { done: hasClient, label: "Add your first client", link: "/admin/clients" },
+    { done: hasSentInvoice, label: "Send your first invoice", link: "/admin/invoices" },
+  ];
+  const allDone = steps.every((s) => s.done);
+  if (allDone) return null;
+
+  const doneCount = steps.filter((s) => s.done).length;
+
+  return (
+    <Card className="border-primary/30 bg-primary/5">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base flex items-center justify-between">
+          <span>🚀 Getting Started</span>
+          <span className="text-xs font-normal text-muted-foreground">
+            {doneCount}/{steps.length} complete
+          </span>
+        </CardTitle>
+        <div className="h-1.5 rounded-full bg-muted overflow-hidden mt-2">
+          <div
+            className="h-full bg-primary rounded-full transition-all duration-500"
+            style={{ width: `${(doneCount / steps.length) * 100}%` }}
+          />
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-1.5 pt-0">
+        {steps.map((step) => (
+          <Link
+            key={step.label}
+            to={step.link}
+            className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors ${
+              step.done
+                ? "text-muted-foreground"
+                : "hover:bg-primary/10 font-medium"
+            }`}
+          >
+            {step.done ? (
+              <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+            ) : (
+              <Circle className="h-4 w-4 text-muted-foreground/50 shrink-0" />
+            )}
+            <span className={step.done ? "line-through" : ""}>{step.label}</span>
+            {!step.done && <ArrowRight className="h-3.5 w-3.5 ml-auto text-muted-foreground" />}
+          </Link>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function Dashboard() {
+  const { user } = useAuth();
+
   const { data: invoices = [] } = useQuery({
     queryKey: ["invoices"],
     queryFn: async () => {
@@ -30,6 +93,21 @@ export default function Dashboard() {
     },
   });
 
+  const { data: hasProfile = false } = useQuery({
+    queryKey: ["hasProfile", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("business_profiles")
+        .select("business_name, email")
+        .eq("user_id", user!.id)
+        .maybeSingle();
+      return !!(data?.business_name);
+    },
+    enabled: !!user,
+  });
+
+  const hasSentInvoice = invoices.some((i) => i.status === "sent" || i.status === "paid");
+
   const totalPaid = invoices
     .filter((i) => i.status === "paid")
     .reduce((sum, i) => sum + Number(i.total), 0);
@@ -44,6 +122,12 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Dashboard</h2>
+
+      <GettingStarted
+        hasProfile={hasProfile}
+        hasClient={clientCount > 0}
+        hasSentInvoice={hasSentInvoice}
+      />
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
