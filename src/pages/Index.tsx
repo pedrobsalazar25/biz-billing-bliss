@@ -1,43 +1,24 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Globe } from "lucide-react";
+import { useLanguage, t, getSlideText } from "@/hooks/useLanguage";
 
 import slide1 from "@/assets/onboarding-1.jpeg";
 import slide2 from "@/assets/onboarding-2.jpeg";
 import slide3 from "@/assets/onboarding-3.jpeg";
 import slide4 from "@/assets/onboarding-4.jpeg";
 
-const slides = [
-  {
-    image: slide1,
-    heading: "Crea Facturas en Segundos",
-    description: "Facturas profesionales listas para enviar — sin necesidad de habilidades de diseño",
-  },
-  {
-    image: slide2,
-    heading: "Integración con WhatsApp",
-    description: "Comparte facturas directamente con tus clientes a través de WhatsApp — instantáneo y personal",
-  },
-  {
-    image: slide3,
-    heading: "Controla tus Pagos Fácilmente",
-    description: "Monitorea todas tus facturas y pagos en un solo panel de control",
-  },
-  {
-    image: slide4,
-    heading: "Completamente Gratis",
-    description: "Comienza a facturar hoy sin necesidad de tarjeta de crédito",
-  },
-];
+const images = [slide1, slide2, slide3, slide4];
 
 export default function Index() {
   const [current, setCurrent] = useState(0);
   const touchStart = useRef<number | null>(null);
-  const isLast = current === slides.length - 1;
-  const slide = slides[current];
+  const { lang, toggleLang } = useLanguage();
+  const isLast = current === images.length - 1;
+  const slide = getSlideText(current, lang);
 
-  const goNext = () => setCurrent((c) => Math.min(c + 1, slides.length - 1));
+  const goNext = () => setCurrent((c) => Math.min(c + 1, images.length - 1));
   const goPrev = () => setCurrent((c) => Math.max(c - 1, 0));
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -55,6 +36,15 @@ export default function Index() {
 
   return (
     <div className="h-dvh bg-background flex flex-col overflow-hidden">
+      {/* Language toggle */}
+      <button
+        onClick={toggleLang}
+        className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-card/80 backdrop-blur px-3 py-1.5 text-xs font-medium text-foreground shadow-sm border border-border"
+      >
+        <Globe className="h-3.5 w-3.5" />
+        {lang === "es" ? "EN" : "ES"}
+      </button>
+
       {/* Image */}
       <div
         className="flex-1 relative overflow-hidden"
@@ -62,7 +52,7 @@ export default function Index() {
         onTouchEnd={handleTouchEnd}
       >
         <img
-          src={slide.image}
+          src={images[current]}
           alt={slide.heading}
           className="w-full h-full object-cover transition-opacity duration-300"
         />
@@ -82,7 +72,7 @@ export default function Index() {
 
         {/* Dots */}
         <div className="flex items-center justify-center gap-2">
-          {slides.map((_, i) => (
+          {images.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
@@ -99,7 +89,7 @@ export default function Index() {
         {isLast ? (
           <Button className="w-full gap-2" size="lg" asChild>
             <Link to="/login">
-              Comenzar <ArrowRight className="h-4 w-4" />
+              {t("onboarding", "start", lang)} <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         ) : (
@@ -109,14 +99,10 @@ export default function Index() {
               className="flex-1 text-muted-foreground"
               asChild
             >
-              <Link to="/login">Saltar</Link>
+              <Link to="/login">{t("onboarding", "skip", lang)}</Link>
             </Button>
-            <Button
-              className="flex-1 gap-2"
-              size="lg"
-              onClick={goNext}
-            >
-              Siguiente <ArrowRight className="h-4 w-4" />
+            <Button className="flex-1 gap-2" size="lg" onClick={goNext}>
+              {t("onboarding", "next", lang)} <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         )}
