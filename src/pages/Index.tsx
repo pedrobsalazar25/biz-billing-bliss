@@ -54,7 +54,7 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="h-dvh bg-background flex flex-col overflow-hidden">
       {/* Image */}
       <div
         className="flex-1 relative overflow-hidden"
