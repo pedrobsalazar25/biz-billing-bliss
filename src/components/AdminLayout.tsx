@@ -48,6 +48,9 @@ export default function AdminLayout() {
             </NavLink>
           ))}
         </nav>
+        <Button variant="ghost" size="sm" onClick={toggleLang} className="justify-start gap-2">
+          <Globe className="h-4 w-4" /> {lang === "es" ? "English" : "Español"}
+        </Button>
         <Button variant="ghost" size="sm" onClick={handleSignOut} className="justify-start gap-2">
           <LogOut className="h-4 w-4" /> Sign Out
         </Button>
