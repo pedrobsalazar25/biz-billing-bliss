@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -33,19 +33,39 @@ const slides = [
 
 export default function Index() {
   const [current, setCurrent] = useState(0);
+  const touchStart = useRef<number | null>(null);
   const isLast = current === slides.length - 1;
   const slide = slides[current];
+
+  const goNext = () => setCurrent((c) => Math.min(c + 1, slides.length - 1));
+  const goPrev = () => setCurrent((c) => Math.max(c - 1, 0));
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart.current === null) return;
+    const diff = touchStart.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? goNext() : goPrev();
+    }
+    touchStart.current = null;
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Image */}
-      <div className="flex-1 relative overflow-hidden">
+      <div
+        className="flex-1 relative overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <img
           src={slide.image}
           alt={slide.heading}
           className="w-full h-full object-cover transition-opacity duration-300"
         />
-        {/* Gradient overlay at bottom */}
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background to-transparent" />
       </div>
 
