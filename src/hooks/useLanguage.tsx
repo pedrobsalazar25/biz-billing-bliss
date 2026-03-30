@@ -9,15 +9,24 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-function detectLang(): Lang {
+const STORAGE_KEY = "app_lang";
+
+function getInitialLang(): Lang {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored === "es" || stored === "en") return stored;
   const browserLang = navigator.language?.slice(0, 2);
   return browserLang === "es" ? "es" : "en";
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>(detectLang);
+  const [lang, setLang] = useState<Lang>(getInitialLang);
 
-  const toggleLang = () => setLang((l) => (l === "es" ? "en" : "es"));
+  const toggleLang = () =>
+    setLang((l) => {
+      const next = l === "es" ? "en" : "es";
+      localStorage.setItem(STORAGE_KEY, next);
+      return next;
+    });
 
   return (
     <LanguageContext.Provider value={{ lang, toggleLang }}>
