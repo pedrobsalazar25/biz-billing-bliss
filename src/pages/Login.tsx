@@ -67,7 +67,7 @@ export default function Login() {
         {lang === "es" ? "EN" : "ES"}
       </button>
 
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-sm bg-card/85 backdrop-blur-md shadow-lg border-border/50">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">
             {isSignUp ? t("login", "titleSignUp", lang) : t("login", "titleSignIn", lang)}
