@@ -54,7 +54,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 relative">
+    <div
+      className="min-h-screen flex items-end justify-center px-4 pb-8 pt-4 relative bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${loginBg})` }}
+    >
       {/* Language toggle */}
       <button
         onClick={toggleLang}
