@@ -114,7 +114,7 @@ export default function Index() {
             <Button
               className="flex-1 gap-2"
               size="lg"
-              onClick={() => setCurrent(current + 1)}
+              onClick={goNext}
             >
               Siguiente <ArrowRight className="h-4 w-4" />
             </Button>
