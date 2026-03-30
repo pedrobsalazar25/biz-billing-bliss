@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import loginBg from "@/assets/login-bg.png";
 import { useAuth } from "@/hooks/useAuth";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
