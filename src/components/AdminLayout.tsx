@@ -1,7 +1,8 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, Package, Building2, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
