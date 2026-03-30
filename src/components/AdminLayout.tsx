@@ -1,7 +1,8 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, Package, Building2, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -14,6 +15,7 @@ const navItems = [
 
 export default function AdminLayout() {
   const { signOut } = useAuth();
+  const { lang, toggleLang } = useLanguage();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -46,6 +48,9 @@ export default function AdminLayout() {
             </NavLink>
           ))}
         </nav>
+        <Button variant="ghost" size="sm" onClick={toggleLang} className="justify-start gap-2">
+          <Globe className="h-4 w-4" /> {lang === "es" ? "English" : "Español"}
+        </Button>
         <Button variant="ghost" size="sm" onClick={handleSignOut} className="justify-start gap-2">
           <LogOut className="h-4 w-4" /> Sign Out
         </Button>
@@ -71,6 +76,9 @@ export default function AdminLayout() {
                 <item.icon className="h-4 w-4" />
               </NavLink>
             ))}
+            <button onClick={toggleLang} className="p-2 text-muted-foreground">
+              <Globe className="h-4 w-4" />
+            </button>
             <button onClick={handleSignOut} className="p-2 text-muted-foreground">
               <LogOut className="h-4 w-4" />
             </button>
