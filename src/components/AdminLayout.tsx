@@ -44,7 +44,7 @@ export default function AdminLayout() {
               }
             >
               <item.icon className="h-4 w-4" />
-              {item.label}
+              {t("admin", item.labelKey, lang)}
             </NavLink>
           ))}
         </nav>
