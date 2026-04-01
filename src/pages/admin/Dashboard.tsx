@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage, t } from "@/hooks/useLanguage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
@@ -10,15 +11,17 @@ function GettingStarted({
   hasProfile,
   hasClient,
   hasSentInvoice,
+  lang,
 }: {
   hasProfile: boolean;
   hasClient: boolean;
   hasSentInvoice: boolean;
+  lang: "es" | "en";
 }) {
   const steps = [
-    { done: hasProfile, label: "Complete your business profile", link: "/admin/profile" },
-    { done: hasClient, label: "Add your first client", link: "/admin/clients" },
-    { done: hasSentInvoice, label: "Send your first invoice", link: "/admin/invoices" },
+    { done: hasProfile, label: t("dashboard", "completeProfile", lang), link: "/admin/profile" },
+    { done: hasClient, label: t("dashboard", "addClient", lang), link: "/admin/clients" },
+    { done: hasSentInvoice, label: t("dashboard", "sendInvoice", lang), link: "/admin/invoices" },
   ];
   const allDone = steps.every((s) => s.done);
   if (allDone) return null;
@@ -29,9 +32,9 @@ function GettingStarted({
     <Card className="border-primary/30 bg-primary/5">
       <CardHeader className="pb-3">
         <CardTitle className="text-base flex items-center justify-between">
-          <span>🚀 Getting Started</span>
+          <span>{t("dashboard", "gettingStarted", lang)}</span>
           <span className="text-xs font-normal text-muted-foreground">
-            {doneCount}/{steps.length} complete
+            {doneCount}/{steps.length} {t("dashboard", "complete", lang)}
           </span>
         </CardTitle>
         <div className="h-1.5 rounded-full bg-muted overflow-hidden mt-2">

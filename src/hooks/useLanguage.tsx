@@ -109,7 +109,7 @@ const translations = {
   },
 } as const;
 
-export function t(section: "onboarding" | "login" | "admin", key: string, lang: Lang): string {
+export function t(section: "onboarding" | "login" | "admin" | "dashboard", key: string, lang: Lang): string {
   const s = translations[section] as any;
   const entry = s[key];
   if (!entry) return key;
