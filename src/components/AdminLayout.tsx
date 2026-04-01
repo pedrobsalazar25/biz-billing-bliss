@@ -1,16 +1,16 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, t } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
-  { to: "/admin/clients", icon: Users, label: "Clients" },
-  { to: "/admin/products", icon: Package, label: "Products" },
-  { to: "/admin/invoices", icon: FileText, label: "Invoices" },
-  { to: "/admin/profile", icon: Building2, label: "My Business" },
+  { to: "/admin", icon: LayoutDashboard, labelKey: "dashboard", end: true },
+  { to: "/admin/clients", icon: Users, labelKey: "clients" },
+  { to: "/admin/products", icon: Package, labelKey: "products" },
+  { to: "/admin/invoices", icon: FileText, labelKey: "invoices" },
+  { to: "/admin/profile", icon: Building2, labelKey: "myBusiness" },
 ];
 
 export default function AdminLayout() {
