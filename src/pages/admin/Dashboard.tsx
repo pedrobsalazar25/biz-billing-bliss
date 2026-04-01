@@ -166,11 +166,11 @@ export default function Dashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Recent Invoices</CardTitle>
+          <CardTitle className="text-lg">{t("dashboard", "recentInvoices", lang)}</CardTitle>
         </CardHeader>
         <CardContent>
           {invoices.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No invoices yet.</p>
+            <p className="text-muted-foreground text-sm">{t("dashboard", "noInvoices", lang)}</p>
           ) : (
             <div className="space-y-2">
               {invoices.map((inv) => (
