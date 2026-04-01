@@ -84,9 +84,18 @@ const translations = {
     switchToSignIn: { es: "¿Ya tienes cuenta? Inicia sesión", en: "Already have an account? Sign in" },
     checkEmail: { es: "Revisa tu correo para confirmar tu cuenta.", en: "Check your email to confirm your account." },
   },
+  admin: {
+    dashboard: { es: "Panel", en: "Dashboard" },
+    clients: { es: "Clientes", en: "Clients" },
+    products: { es: "Productos", en: "Products" },
+    invoices: { es: "Facturas", en: "Invoices" },
+    myBusiness: { es: "Mi Negocio", en: "My Business" },
+    signOut: { es: "Cerrar Sesión", en: "Sign Out" },
+    admin: { es: "Admin", en: "Admin" },
+  },
 } as const;
 
-export function t(section: "onboarding" | "login", key: string, lang: Lang): string {
+export function t(section: "onboarding" | "login" | "admin", key: string, lang: Lang): string {
   const s = translations[section] as any;
   const entry = s[key];
   if (!entry) return key;

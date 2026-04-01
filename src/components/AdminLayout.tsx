@@ -1,16 +1,16 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, t } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
-  { to: "/admin/clients", icon: Users, label: "Clients" },
-  { to: "/admin/products", icon: Package, label: "Products" },
-  { to: "/admin/invoices", icon: FileText, label: "Invoices" },
-  { to: "/admin/profile", icon: Building2, label: "My Business" },
+  { to: "/admin", icon: LayoutDashboard, labelKey: "dashboard", end: true },
+  { to: "/admin/clients", icon: Users, labelKey: "clients" },
+  { to: "/admin/products", icon: Package, labelKey: "products" },
+  { to: "/admin/invoices", icon: FileText, labelKey: "invoices" },
+  { to: "/admin/profile", icon: Building2, labelKey: "myBusiness" },
 ];
 
 export default function AdminLayout() {
@@ -27,7 +27,7 @@ export default function AdminLayout() {
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
       <aside className="hidden md:flex w-56 flex-col border-r border-border bg-card p-4">
-        <h1 className="text-lg font-bold mb-6 px-2">Admin</h1>
+        <h1 className="text-lg font-bold mb-6 px-2">{t("admin", "admin", lang)}</h1>
         <nav className="flex-1 space-y-1">
           {navItems.map((item) => (
             <NavLink
@@ -44,7 +44,7 @@ export default function AdminLayout() {
               }
             >
               <item.icon className="h-4 w-4" />
-              {item.label}
+              {t("admin", item.labelKey, lang)}
             </NavLink>
           ))}
         </nav>
@@ -52,14 +52,14 @@ export default function AdminLayout() {
           <Globe className="h-4 w-4" /> {lang === "es" ? "English" : "Español"}
         </Button>
         <Button variant="ghost" size="sm" onClick={handleSignOut} className="justify-start gap-2">
-          <LogOut className="h-4 w-4" /> Sign Out
+          <LogOut className="h-4 w-4" /> {t("admin", "signOut", lang)}
         </Button>
       </aside>
 
       {/* Mobile header */}
       <div className="flex flex-col flex-1">
         <header className="md:hidden flex items-center justify-between border-b border-border bg-card px-4 py-3">
-          <h1 className="text-lg font-bold">Admin</h1>
+          <h1 className="text-lg font-bold">{t("admin", "admin", lang)}</h1>
           <nav className="flex items-center gap-1">
             {navItems.map((item) => (
               <NavLink
