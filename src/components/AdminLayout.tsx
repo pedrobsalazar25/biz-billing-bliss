@@ -52,7 +52,7 @@ export default function AdminLayout() {
           <Globe className="h-4 w-4" /> {lang === "es" ? "English" : "Español"}
         </Button>
         <Button variant="ghost" size="sm" onClick={handleSignOut} className="justify-start gap-2">
-          <LogOut className="h-4 w-4" /> Sign Out
+          <LogOut className="h-4 w-4" /> {t("admin", "signOut", lang)}
         </Button>
       </aside>
 
