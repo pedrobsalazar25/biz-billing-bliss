@@ -27,7 +27,7 @@ export default function AdminLayout() {
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
       <aside className="hidden md:flex w-56 flex-col border-r border-border bg-card p-4">
-        <h1 className="text-lg font-bold mb-6 px-2">Admin</h1>
+        <h1 className="text-lg font-bold mb-6 px-2">{t("admin", "admin", lang)}</h1>
         <nav className="flex-1 space-y-1">
           {navItems.map((item) => (
             <NavLink
