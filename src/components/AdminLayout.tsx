@@ -59,7 +59,7 @@ export default function AdminLayout() {
       {/* Mobile header */}
       <div className="flex flex-col flex-1">
         <header className="md:hidden flex items-center justify-between border-b border-border bg-card px-4 py-3">
-          <h1 className="text-lg font-bold">Admin</h1>
+          <h1 className="text-lg font-bold">{t("admin", "admin", lang)}</h1>
           <nav className="flex items-center gap-1">
             {navItems.map((item) => (
               <NavLink
