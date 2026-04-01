@@ -93,9 +93,23 @@ const translations = {
     signOut: { es: "Cerrar Sesión", en: "Sign Out" },
     admin: { es: "Admin", en: "Admin" },
   },
+  dashboard: {
+    title: { es: "Panel", en: "Dashboard" },
+    gettingStarted: { es: "🚀 Primeros Pasos", en: "🚀 Getting Started" },
+    complete: { es: "completado", en: "complete" },
+    completeProfile: { es: "Completa tu perfil de negocio", en: "Complete your business profile" },
+    addClient: { es: "Agrega tu primer cliente", en: "Add your first client" },
+    sendInvoice: { es: "Envía tu primera factura", en: "Send your first invoice" },
+    invoices: { es: "Facturas", en: "Invoices" },
+    clients: { es: "Clientes", en: "Clients" },
+    paidTotal: { es: "Total Cobrado", en: "Paid Total" },
+    recentInvoices: { es: "Facturas Recientes", en: "Recent Invoices" },
+    noInvoices: { es: "Aún no hay facturas.", en: "No invoices yet." },
+    noClient: { es: "Sin cliente", en: "No client" },
+  },
 } as const;
 
-export function t(section: "onboarding" | "login" | "admin", key: string, lang: Lang): string {
+export function t(section: "onboarding" | "login" | "admin" | "dashboard", key: string, lang: Lang): string {
   const s = translations[section] as any;
   const entry = s[key];
   if (!entry) return key;

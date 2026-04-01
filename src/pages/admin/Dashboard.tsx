@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage, t } from "@/hooks/useLanguage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
@@ -10,15 +11,17 @@ function GettingStarted({
   hasProfile,
   hasClient,
   hasSentInvoice,
+  lang,
 }: {
   hasProfile: boolean;
   hasClient: boolean;
   hasSentInvoice: boolean;
+  lang: "es" | "en";
 }) {
   const steps = [
-    { done: hasProfile, label: "Complete your business profile", link: "/admin/profile" },
-    { done: hasClient, label: "Add your first client", link: "/admin/clients" },
-    { done: hasSentInvoice, label: "Send your first invoice", link: "/admin/invoices" },
+    { done: hasProfile, label: t("dashboard", "completeProfile", lang), link: "/admin/profile" },
+    { done: hasClient, label: t("dashboard", "addClient", lang), link: "/admin/clients" },
+    { done: hasSentInvoice, label: t("dashboard", "sendInvoice", lang), link: "/admin/invoices" },
   ];
   const allDone = steps.every((s) => s.done);
   if (allDone) return null;
@@ -29,9 +32,9 @@ function GettingStarted({
     <Card className="border-primary/30 bg-primary/5">
       <CardHeader className="pb-3">
         <CardTitle className="text-base flex items-center justify-between">
-          <span>🚀 Getting Started</span>
+          <span>{t("dashboard", "gettingStarted", lang)}</span>
           <span className="text-xs font-normal text-muted-foreground">
-            {doneCount}/{steps.length} complete
+            {doneCount}/{steps.length} {t("dashboard", "complete", lang)}
           </span>
         </CardTitle>
         <div className="h-1.5 rounded-full bg-muted overflow-hidden mt-2">
@@ -68,6 +71,7 @@ function GettingStarted({
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { lang } = useLanguage();
 
   const { data: invoices = [] } = useQuery({
     queryKey: ["invoices"],
@@ -121,18 +125,19 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Dashboard</h2>
+      <h2 className="text-2xl font-bold">{t("dashboard", "title", lang)}</h2>
 
       <GettingStarted
         hasProfile={hasProfile}
         hasClient={clientCount > 0}
         hasSentInvoice={hasSentInvoice}
+        lang={lang}
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Invoices</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("dashboard", "invoices", lang)}</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -141,7 +146,7 @@ export default function Dashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Clients</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("dashboard", "clients", lang)}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -150,7 +155,7 @@ export default function Dashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Paid Total</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("dashboard", "paidTotal", lang)}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -161,11 +166,11 @@ export default function Dashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Recent Invoices</CardTitle>
+          <CardTitle className="text-lg">{t("dashboard", "recentInvoices", lang)}</CardTitle>
         </CardHeader>
         <CardContent>
           {invoices.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No invoices yet.</p>
+            <p className="text-muted-foreground text-sm">{t("dashboard", "noInvoices", lang)}</p>
           ) : (
             <div className="space-y-2">
               {invoices.map((inv) => (
@@ -177,7 +182,7 @@ export default function Dashboard() {
                   <div>
                     <span className="font-medium">{inv.invoice_number}</span>
                     <span className="ml-2 text-sm text-muted-foreground">
-                      {(inv.clients as any)?.name ?? "No client"}
+                      {(inv.clients as any)?.name ?? t("dashboard", "noClient", lang)}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
