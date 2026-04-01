@@ -137,7 +137,7 @@ export default function Dashboard() {
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Invoices</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("dashboard", "invoices", lang)}</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
