@@ -182,7 +182,7 @@ export default function Dashboard() {
                   <div>
                     <span className="font-medium">{inv.invoice_number}</span>
                     <span className="ml-2 text-sm text-muted-foreground">
-                      {(inv.clients as any)?.name ?? "No client"}
+                      {(inv.clients as any)?.name ?? t("dashboard", "noClient", lang)}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
