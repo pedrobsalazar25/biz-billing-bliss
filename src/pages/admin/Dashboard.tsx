@@ -155,7 +155,7 @@ export default function Dashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Paid Total</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("dashboard", "paidTotal", lang)}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
