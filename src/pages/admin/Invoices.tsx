@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage, t } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,6 +31,7 @@ type InvoiceStatus = Database["public"]["Enums"]["invoice_status"];
 
 export default function Invoices() {
   const { user } = useAuth();
+  const { lang } = useLanguage();
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -63,7 +65,7 @@ export default function Invoices() {
     mutationFn: async () => {
       const { error } = await supabase.from("invoices").insert({
         user_id: user!.id,
-        invoice_number: "", // trigger will auto-generate
+        invoice_number: "",
         client_id: clientId || null,
         due_date: dueDate || null,
         tax_rate: parseFloat(taxRate) || 0,
@@ -73,7 +75,7 @@ export default function Invoices() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success("Invoice created");
+      toast.success(t("invoicesPage", "createInvoice", lang));
       setOpen(false);
       setClientId("");
       setDueDate("");
@@ -92,7 +94,6 @@ export default function Invoices() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success("Status updated");
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -104,10 +105,16 @@ export default function Invoices() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success("Invoice deleted");
     },
     onError: (err: any) => toast.error(err.message),
   });
+
+  const statusLabels: Record<string, () => string> = {
+    draft: () => t("invoicesPage", "draft", lang),
+    sent: () => t("invoicesPage", "sent", lang),
+    paid: () => t("invoicesPage", "paid", lang),
+    void: () => t("invoicesPage", "void", lang),
+  };
 
   const statusColor: Record<string, string> = {
     draft: "secondary",
@@ -119,16 +126,16 @@ export default function Invoices() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Invoices</h2>
+        <h2 className="text-2xl font-bold">{t("invoicesPage", "title", lang)}</h2>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button size="sm">
-              <Plus className="h-4 w-4 mr-1" /> New Invoice
+              <Plus className="h-4 w-4 mr-1" /> {t("invoicesPage", "newInvoice", lang)}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create Invoice</DialogTitle>
+              <DialogTitle>{t("invoicesPage", "createInvoice", lang)}</DialogTitle>
             </DialogHeader>
             <form
               onSubmit={(e) => {
@@ -138,10 +145,10 @@ export default function Invoices() {
               className="space-y-4"
             >
               <div className="space-y-2">
-                <Label>Client</Label>
+                <Label>{t("invoicesPage", "client", lang)}</Label>
                 <Select value={clientId} onValueChange={setClientId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select client" />
+                    <SelectValue placeholder={t("invoicesPage", "selectClient", lang)} />
                   </SelectTrigger>
                   <SelectContent>
                     {clients.map((c) => (
@@ -153,19 +160,19 @@ export default function Invoices() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Due Date</Label>
+                <Label>{t("invoicesPage", "dueDate", lang)}</Label>
                 <Input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>Tax Rate (%)</Label>
+                <Label>{t("invoicesPage", "taxRate", lang)}</Label>
                 <Input type="number" step="0.01" value={taxRate} onChange={(e) => setTaxRate(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>Notes</Label>
+                <Label>{t("invoicesPage", "notes", lang)}</Label>
                 <Input value={notes} onChange={(e) => setNotes(e.target.value)} />
               </div>
               <Button type="submit" className="w-full" disabled={createMutation.isPending}>
-                {createMutation.isPending ? "Creating..." : "Create Invoice"}
+                {createMutation.isPending ? t("invoicesPage", "creating", lang) : t("invoicesPage", "createInvoice", lang)}
               </Button>
             </form>
           </DialogContent>
@@ -173,10 +180,10 @@ export default function Invoices() {
       </div>
 
       {isLoading ? (
-        <p className="text-muted-foreground text-sm">Loading...</p>
+        <p className="text-muted-foreground text-sm">{t("invoicesPage", "loading", lang)}</p>
       ) : invoices.length === 0 ? (
         <Card>
-          <CardContent className="py-8 text-center text-muted-foreground">No invoices yet.</CardContent>
+          <CardContent className="py-8 text-center text-muted-foreground">{t("invoicesPage", "noInvoices", lang)}</CardContent>
         </Card>
       ) : (
         <div className="space-y-2">
@@ -186,7 +193,7 @@ export default function Invoices() {
                 <div>
                   <p className="font-medium">{inv.invoice_number}</p>
                   <p className="text-sm text-muted-foreground">
-                    {(inv.clients as any)?.name ?? "No client"} · ${Number(inv.total).toFixed(2)}
+                    {(inv.clients as any)?.name ?? t("invoicesPage", "noClient", lang)} · ${Number(inv.total).toFixed(2)}
                   </p>
                 </div>
                 <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -196,14 +203,14 @@ export default function Invoices() {
                       updateStatus.mutate({ id: inv.id, status: val as InvoiceStatus })
                     }
                   >
-                    <SelectTrigger className="w-24 h-8 text-xs">
+                    <SelectTrigger className="w-28 h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="sent">Sent</SelectItem>
-                      <SelectItem value="paid">Paid</SelectItem>
-                      <SelectItem value="void">Void</SelectItem>
+                      <SelectItem value="draft">{t("invoicesPage", "draft", lang)}</SelectItem>
+                      <SelectItem value="sent">{t("invoicesPage", "sent", lang)}</SelectItem>
+                      <SelectItem value="paid">{t("invoicesPage", "paid", lang)}</SelectItem>
+                      <SelectItem value="void">{t("invoicesPage", "void", lang)}</SelectItem>
                     </SelectContent>
                   </Select>
                   <Button
@@ -211,7 +218,7 @@ export default function Invoices() {
                     size="icon"
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (confirm("Delete this invoice?")) deleteMutation.mutate(inv.id);
+                      if (confirm(t("invoicesPage", "deleteConfirm", lang))) deleteMutation.mutate(inv.id);
                     }}
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />

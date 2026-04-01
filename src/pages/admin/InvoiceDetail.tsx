@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Plus, Pencil, Trash2, Copy, Send, MessageCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage, t } from "@/hooks/useLanguage";
 
 interface LineItemForm {
   description: string;
@@ -46,6 +47,7 @@ export default function InvoiceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { lang } = useLanguage();
   const qc = useQueryClient();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -109,7 +111,6 @@ export default function InvoiceDetail() {
       qc.invalidateQueries({ queryKey: ["invoice-items", id] });
       qc.invalidateQueries({ queryKey: ["invoice", id] });
       qc.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success("Product added");
       closeDialog();
     },
     onError: (err: any) => toast.error(err.message),
@@ -132,7 +133,6 @@ export default function InvoiceDetail() {
       qc.invalidateQueries({ queryKey: ["invoice-items", id] });
       qc.invalidateQueries({ queryKey: ["invoice", id] });
       qc.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success("Product updated");
       closeDialog();
     },
     onError: (err: any) => toast.error(err.message),
@@ -147,7 +147,6 @@ export default function InvoiceDetail() {
       qc.invalidateQueries({ queryKey: ["invoice-items", id] });
       qc.invalidateQueries({ queryKey: ["invoice", id] });
       qc.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success("Product removed");
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -178,7 +177,7 @@ export default function InvoiceDetail() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.description.trim()) {
-      toast.error("Description is required");
+      toast.error(t("invoiceDetail", "descriptionRequired", lang));
       return;
     }
     if (editingId) {
@@ -191,11 +190,11 @@ export default function InvoiceDetail() {
   const isPending = addMutation.isPending || updateMutation.isPending;
 
   if (invoiceLoading || itemsLoading) {
-    return <p className="text-muted-foreground text-sm">Loading...</p>;
+    return <p className="text-muted-foreground text-sm">{t("invoiceDetail", "loading", lang)}</p>;
   }
 
   if (!invoice) {
-    return <p className="text-destructive">Invoice not found.</p>;
+    return <p className="text-destructive">{t("invoiceDetail", "notFound", lang)}</p>;
   }
 
   const currencySymbol = invoice.currency === "EUR" ? "€" : "$";
@@ -210,7 +209,7 @@ export default function InvoiceDetail() {
           <div className="min-w-0">
             <h2 className="text-xl md:text-2xl font-bold truncate">{invoice.invoice_number}</h2>
             <p className="text-sm text-muted-foreground truncate">
-              {(invoice.clients as any)?.name ?? "No client"} · {invoice.status}
+              {(invoice.clients as any)?.name ?? t("invoiceDetail", "noClient", lang)} · {invoice.status}
             </p>
           </div>
         </div>
@@ -255,21 +254,21 @@ export default function InvoiceDetail() {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-lg">Products / Line Items</CardTitle>
+          <CardTitle className="text-lg">{t("invoiceDetail", "lineItems", lang)}</CardTitle>
           <Dialog open={dialogOpen} onOpenChange={(v) => (v ? openAdd() : closeDialog())}>
             <DialogTrigger asChild>
               <Button size="sm">
-                <Plus className="h-4 w-4 mr-1" /> Add Product
+                <Plus className="h-4 w-4 mr-1" /> {t("invoiceDetail", "addProduct", lang)}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{editingId ? "Edit Product" : "Add Product"}</DialogTitle>
+                <DialogTitle>{editingId ? t("invoiceDetail", "editProduct", lang) : t("invoiceDetail", "addProduct", lang)}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 {!editingId && products.length > 0 && (
                   <div className="space-y-2">
-                    <Label>Pick from saved products</Label>
+                    <Label>{t("invoiceDetail", "pickProduct", lang)}</Label>
                     <Select
                       onValueChange={(productId) => {
                         const product = products.find((p) => p.id === productId);
@@ -283,7 +282,7 @@ export default function InvoiceDetail() {
                       }}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a product..." />
+                        <SelectValue placeholder={t("invoiceDetail", "selectProduct", lang)} />
                       </SelectTrigger>
                       <SelectContent>
                         {products.map((p) => (
@@ -296,17 +295,17 @@ export default function InvoiceDetail() {
                   </div>
                 )}
                 <div className="space-y-2">
-                  <Label>Description</Label>
+                  <Label>{t("invoiceDetail", "description", lang)}</Label>
                   <Input
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    placeholder="Product or service name"
+                    placeholder={t("invoiceDetail", "placeholder", lang)}
                     required
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Quantity</Label>
+                    <Label>{t("invoiceDetail", "quantity", lang)}</Label>
                     <Input
                       type="number"
                       step="0.01"
@@ -316,7 +315,7 @@ export default function InvoiceDetail() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Unit Price ({currencySymbol})</Label>
+                    <Label>{t("invoiceDetail", "unitPrice", lang)} ({currencySymbol})</Label>
                     <Input
                       type="number"
                       step="0.01"
@@ -333,17 +332,17 @@ export default function InvoiceDetail() {
                     onCheckedChange={(checked) => setForm({ ...form, waived: !!checked })}
                   />
                   <Label htmlFor="waived" className="text-sm font-normal">
-                    Waive this service (included at no charge)
+                    {t("invoiceDetail", "waive", lang)}
                   </Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Amount: {currencySymbol}
+                  {t("invoiceDetail", "amount", lang)}: {currencySymbol}
                   {form.waived
-                    ? "0.00 (waived)"
+                    ? `0.00 (${t("invoiceDetail", "waived", lang).toLowerCase()})`
                     : ((parseFloat(form.quantity) || 0) * (parseFloat(form.unit_price) || 0)).toFixed(2)}
                 </p>
                 <Button type="submit" className="w-full" disabled={isPending}>
-                  {isPending ? "Saving..." : editingId ? "Update Product" : "Add Product"}
+                  {isPending ? t("invoiceDetail", "saving", lang) : editingId ? t("invoiceDetail", "updateProduct", lang) : t("invoiceDetail", "addProduct", lang)}
                 </Button>
               </form>
             </DialogContent>
@@ -352,7 +351,7 @@ export default function InvoiceDetail() {
         <CardContent>
           {items.length === 0 ? (
             <p className="text-center text-muted-foreground py-6">
-              No products yet. Click "Add Product" to get started.
+              {t("invoiceDetail", "noItems", lang)}
             </p>
           ) : (
             <>
@@ -364,7 +363,7 @@ export default function InvoiceDetail() {
                       <p className="text-sm font-medium truncate">
                         {item.description}
                         {(item as any).waived && (
-                          <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">Waived</span>
+                          <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">{t("invoiceDetail", "waived", lang)}</span>
                         )}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
@@ -375,7 +374,7 @@ export default function InvoiceDetail() {
                       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(item)}>
                         <Pencil className="h-3.5 w-3.5" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { if (confirm("Remove this product?")) deleteMutation.mutate(item.id); }}>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { if (confirm(t("invoiceDetail", "removeConfirm", lang))) deleteMutation.mutate(item.id); }}>
                         <Trash2 className="h-3.5 w-3.5 text-destructive" />
                       </Button>
                     </div>
@@ -387,10 +386,10 @@ export default function InvoiceDetail() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Description</TableHead>
-                    <TableHead className="text-right w-24">Qty</TableHead>
-                    <TableHead className="text-right w-32">Unit Price</TableHead>
-                    <TableHead className="text-right w-32">Amount</TableHead>
+                    <TableHead>{t("invoiceDetail", "description", lang)}</TableHead>
+                    <TableHead className="text-right w-24">{t("invoiceDetail", "quantity", lang)}</TableHead>
+                    <TableHead className="text-right w-32">{t("invoiceDetail", "unitPrice", lang)}</TableHead>
+                    <TableHead className="text-right w-32">{t("invoiceDetail", "amount", lang)}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -401,7 +400,7 @@ export default function InvoiceDetail() {
                         {item.description}
                         {(item as any).waived && (
                           <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">
-                            Waived
+                            {t("invoiceDetail", "waived", lang)}
                           </span>
                         )}
                       </TableCell>
@@ -421,7 +420,7 @@ export default function InvoiceDetail() {
                             variant="ghost"
                             size="icon"
                             onClick={() => {
-                              if (confirm("Remove this product?")) deleteMutation.mutate(item.id);
+                              if (confirm(t("invoiceDetail", "removeConfirm", lang))) deleteMutation.mutate(item.id);
                             }}
                           >
                             <Trash2 className="h-3.5 w-3.5 text-destructive" />
@@ -438,13 +437,13 @@ export default function InvoiceDetail() {
 
           {items.length > 0 && (
             <div className="mt-4 border-t pt-4 space-y-1 text-sm text-right">
-              <p>Subtotal: {currencySymbol}{Number(invoice.subtotal).toFixed(2)}</p>
-              <p>Tax ({Number(invoice.tax_rate)}%): {currencySymbol}{Number(invoice.tax_amount).toFixed(2)}</p>
+              <p>{t("invoiceDetail", "subtotal", lang)}: {currencySymbol}{Number(invoice.subtotal).toFixed(2)}</p>
+              <p>{t("invoiceDetail", "tax", lang)} ({Number(invoice.tax_rate)}%): {currencySymbol}{Number(invoice.tax_amount).toFixed(2)}</p>
               {Number(invoice.discount_amount) > 0 && (
-                <p>Discount: -{currencySymbol}{Number(invoice.discount_amount).toFixed(2)}</p>
+                <p>{t("invoiceDetail", "discount", lang)}: -{currencySymbol}{Number(invoice.discount_amount).toFixed(2)}</p>
               )}
               <p className="font-bold text-base">
-                Total: {currencySymbol}{Number(invoice.total).toFixed(2)}
+                {t("invoiceDetail", "total", lang)}: {currencySymbol}{Number(invoice.total).toFixed(2)}
               </p>
             </div>
           )}

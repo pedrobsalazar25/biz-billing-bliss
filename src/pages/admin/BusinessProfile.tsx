@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage, t } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,6 +40,7 @@ const emptyForm: ProfileForm = {
 
 export default function BusinessProfile() {
   const { user } = useAuth();
+  const { lang } = useLanguage();
   const qc = useQueryClient();
   const [form, setForm] = useState<ProfileForm>(emptyForm);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -90,9 +92,8 @@ export default function BusinessProfile() {
       if (uploadErr) throw uploadErr;
 
       const { data: urlData } = supabase.storage.from("logos").getPublicUrl(path);
-      const logoUrl = urlData.publicUrl + "?t=" + Date.now(); // cache bust
+      const logoUrl = urlData.publicUrl + "?t=" + Date.now();
 
-      // Save logo_url to profile
       if (profile) {
         await supabase.from("business_profiles").update({ logo_url: logoUrl }).eq("id", profile.id);
       } else {
@@ -147,7 +148,7 @@ export default function BusinessProfile() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["businessProfile"] });
-      toast.success("Profile saved");
+      toast.success(t("profile", "saveProfile", lang));
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -156,6 +157,12 @@ export default function BusinessProfile() {
 
   const isNewUser = !profile;
 
+  const stepLabels = [
+    t("profile", "businessName", lang),
+    t("profile", "contactInfo", lang),
+    t("profile", "address", lang),
+    t("profile", "logo", lang),
+  ];
   const completedSteps = [
     !!form.business_name,
     !!(form.email || form.phone),
@@ -165,16 +172,16 @@ export default function BusinessProfile() {
   const stepsTotal = completedSteps.length;
   const stepsDone = completedSteps.filter(Boolean).length;
 
-  if (isLoading) return <p className="text-sm text-muted-foreground">Loading...</p>;
+  if (isLoading) return <p className="text-sm text-muted-foreground">{t("invoiceDetail", "loading", lang)}</p>;
 
   return (
     <div className="space-y-6 max-w-2xl">
       {isNewUser && (
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="pt-6">
-            <h2 className="text-xl font-bold mb-1">👋 Welcome to your invoicing dashboard!</h2>
+            <h2 className="text-xl font-bold mb-1">{t("profile", "welcome", lang)}</h2>
             <p className="text-sm text-muted-foreground mb-4">
-              Let's get your business profile set up. This info will appear on every invoice you send.
+              {t("profile", "welcomeDesc", lang)}
             </p>
             <div className="flex items-center gap-3">
               <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
@@ -184,11 +191,11 @@ export default function BusinessProfile() {
                 />
               </div>
               <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
-                {stepsDone}/{stepsTotal} complete
+                {stepsDone}/{stepsTotal} {t("profile", "complete", lang)}
               </span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
-              {["Business name", "Contact info", "Address", "Logo"].map((label, i) => (
+              {stepLabels.map((label, i) => (
                 <div
                   key={label}
                   className={`text-xs rounded-md px-2 py-1.5 text-center font-medium ${
@@ -208,16 +215,15 @@ export default function BusinessProfile() {
       <div className="flex items-center gap-3">
         <Building2 className="h-6 w-6 text-primary" />
         <div>
-          <h2 className="text-2xl font-bold">{isNewUser ? "Set Up Your Business" : "Business Profile"}</h2>
-          <p className="text-sm text-muted-foreground">Your company information shown on invoices</p>
+          <h2 className="text-2xl font-bold">{isNewUser ? t("profile", "setupTitle", lang) : t("profile", "title", lang)}</h2>
+          <p className="text-sm text-muted-foreground">{t("profile", "subtitle", lang)}</p>
         </div>
       </div>
 
       <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(); }} className="space-y-6">
-        {/* Logo Upload */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Company Logo</CardTitle>
+            <CardTitle className="text-base">{t("profile", "companyLogo", lang)}</CardTitle>
           </CardHeader>
           <CardContent>
             <input
@@ -256,9 +262,9 @@ export default function BusinessProfile() {
               )}
               <div>
                 <Button type="button" variant="outline" size="sm" disabled={uploading} onClick={() => fileRef.current?.click()}>
-                  {uploading ? "Uploading..." : logoPreview ? "Change Logo" : "Upload Logo"}
+                  {uploading ? t("profile", "uploading", lang) : logoPreview ? t("profile", "changeLogo", lang) : t("profile", "uploadLogo", lang)}
                 </Button>
-                <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 2MB. Shown on invoices.</p>
+                <p className="text-xs text-muted-foreground mt-1">{t("profile", "logoHint", lang)}</p>
               </div>
             </div>
           </CardContent>
@@ -266,27 +272,27 @@ export default function BusinessProfile() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Company Details</CardTitle>
+            <CardTitle className="text-base">{t("profile", "companyDetails", lang)}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2 sm:col-span-2">
-              <Label>Business Name *</Label>
+              <Label>{t("profile", "businessNameLabel", lang)}</Label>
               <Input required value={form.business_name} onChange={(e) => set("business_name", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Email</Label>
+              <Label>{t("profile", "email", lang)}</Label>
               <Input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Phone</Label>
+              <Label>{t("profile", "phone", lang)}</Label>
               <Input value={form.phone} onChange={(e) => set("phone", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Tax ID / VAT</Label>
+              <Label>{t("profile", "taxId", lang)}</Label>
               <Input value={form.tax_id} onChange={(e) => set("tax_id", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Invoice Prefix</Label>
+              <Label>{t("profile", "invoicePrefix", lang)}</Label>
               <Input value={form.invoice_prefix} onChange={(e) => set("invoice_prefix", e.target.value)} placeholder="INV-" />
             </div>
           </CardContent>
@@ -294,31 +300,31 @@ export default function BusinessProfile() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Address</CardTitle>
+            <CardTitle className="text-base">{t("profile", "addressTitle", lang)}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2 sm:col-span-2">
-              <Label>Address Line 1</Label>
+              <Label>{t("profile", "addressLine1", lang)}</Label>
               <Input value={form.address_line1} onChange={(e) => set("address_line1", e.target.value)} />
             </div>
             <div className="space-y-2 sm:col-span-2">
-              <Label>Address Line 2</Label>
+              <Label>{t("profile", "addressLine2", lang)}</Label>
               <Input value={form.address_line2} onChange={(e) => set("address_line2", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>City</Label>
+              <Label>{t("profile", "city", lang)}</Label>
               <Input value={form.city} onChange={(e) => set("city", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>State / Province</Label>
+              <Label>{t("profile", "state", lang)}</Label>
               <Input value={form.state} onChange={(e) => set("state", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Postal Code</Label>
+              <Label>{t("profile", "postalCode", lang)}</Label>
               <Input value={form.postal_code} onChange={(e) => set("postal_code", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Country</Label>
+              <Label>{t("profile", "country", lang)}</Label>
               <Input value={form.country} onChange={(e) => set("country", e.target.value)} />
             </div>
           </CardContent>
@@ -326,7 +332,7 @@ export default function BusinessProfile() {
 
         <Button type="submit" disabled={saveMutation.isPending} className="gap-2">
           <Save className="h-4 w-4" />
-          {saveMutation.isPending ? "Saving..." : "Save Profile"}
+          {saveMutation.isPending ? t("profile", "saving", lang) : t("profile", "saveProfile", lang)}
         </Button>
       </form>
     </div>

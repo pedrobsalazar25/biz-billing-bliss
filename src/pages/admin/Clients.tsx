@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage, t } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,7 @@ const emptyForm: ClientForm = { name: "", email: "", phone: "", company: "" };
 
 export default function Clients() {
   const { user } = useAuth();
+  const { lang } = useLanguage();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
@@ -66,7 +68,7 @@ export default function Clients() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["clients"] });
-      toast.success(editId ? "Client updated" : "Client created");
+      toast.success(editId ? t("clients", "clientUpdated", lang) : t("clients", "clientCreated", lang));
       setOpen(false);
       setForm(emptyForm);
       setEditId(null);
@@ -81,7 +83,7 @@ export default function Clients() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["clients"] });
-      toast.success("Client deleted");
+      toast.success(t("clients", "clientDeleted", lang));
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -101,10 +103,10 @@ export default function Clients() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="text-2xl font-bold">Clients</h2>
+        <h2 className="text-2xl font-bold">{t("clients", "title", lang)}</h2>
         <div className="flex items-center gap-2">
           <CsvUploadButton
-            label="Upload CSV"
+            label={t("clients", "uploadCsv", lang)}
             sampleHeaders={["name", "email", "phone", "company"]}
             sampleRow={["John Doe", "john@example.com", "+34 600 000 000", "Acme Corp"]}
             onParsed={async (rows) => {
@@ -124,12 +126,12 @@ export default function Clients() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button size="sm" onClick={openNew}>
-                <Plus className="h-4 w-4 mr-1" /> Add Client
+                <Plus className="h-4 w-4 mr-1" /> {t("clients", "addClient", lang)}
               </Button>
             </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editId ? "Edit Client" : "New Client"}</DialogTitle>
+              <DialogTitle>{editId ? t("clients", "editClient", lang) : t("clients", "newClient", lang)}</DialogTitle>
             </DialogHeader>
             <form
               onSubmit={(e) => {
@@ -139,23 +141,23 @@ export default function Clients() {
               className="space-y-4"
             >
               <div className="space-y-2">
-                <Label>Name *</Label>
+                <Label>{t("clients", "name", lang)} *</Label>
                 <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               </div>
               <div className="space-y-2">
-                <Label>Email</Label>
+                <Label>{t("clients", "email", lang)}</Label>
                 <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
               </div>
               <div className="space-y-2">
-                <Label>Phone</Label>
+                <Label>{t("clients", "phone", lang)}</Label>
                 <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
               </div>
               <div className="space-y-2">
-                <Label>Company</Label>
+                <Label>{t("clients", "company", lang)}</Label>
                 <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
               </div>
               <Button type="submit" className="w-full" disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? "Saving..." : "Save"}
+                {saveMutation.isPending ? t("clients", "saving", lang) : t("clients", "save", lang)}
               </Button>
             </form>
           </DialogContent>
@@ -164,10 +166,10 @@ export default function Clients() {
       </div>
 
       {isLoading ? (
-        <p className="text-muted-foreground text-sm">Loading...</p>
+        <p className="text-muted-foreground text-sm">{t("clients", "loading", lang)}</p>
       ) : clients.length === 0 ? (
         <Card>
-          <CardContent className="py-8 text-center text-muted-foreground">No clients yet.</CardContent>
+          <CardContent className="py-8 text-center text-muted-foreground">{t("clients", "noClients", lang)}</CardContent>
         </Card>
       ) : (
         <div className="space-y-2">
@@ -188,7 +190,7 @@ export default function Clients() {
                     variant="ghost"
                     size="icon"
                     onClick={() => {
-                      if (confirm("Delete this client?")) deleteMutation.mutate(c.id);
+                      if (confirm(t("clients", "deleteConfirm", lang))) deleteMutation.mutate(c.id);
                     }}
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
