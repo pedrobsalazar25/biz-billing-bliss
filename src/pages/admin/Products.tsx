@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage, t } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +28,7 @@ const emptyForm: ProductForm = { name: "", description: "", unit_price: "0" };
 
 export default function Products() {
   const { user } = useAuth();
+  const { lang } = useLanguage();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -62,7 +64,7 @@ export default function Products() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["products"] });
-      toast.success(editingId ? "Product updated" : "Product created");
+      toast.success(editingId ? t("products", "productUpdated", lang) : t("products", "productCreated", lang));
       closeDialog();
     },
     onError: (err: any) => toast.error(err.message),
@@ -75,7 +77,7 @@ export default function Products() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["products"] });
-      toast.success("Product deleted");
+      toast.success(t("products", "productDeleted", lang));
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -99,10 +101,10 @@ export default function Products() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="text-2xl font-bold">Products</h2>
+        <h2 className="text-2xl font-bold">{t("products", "title", lang)}</h2>
         <div className="flex items-center gap-2">
           <CsvUploadButton
-            label="Upload CSV"
+            label={t("products", "uploadCsv", lang)}
             sampleHeaders={["name", "description", "unit_price"]}
             sampleRow={["Web Design", "Full website design service", "500"]}
             onParsed={async (rows) => {
@@ -121,12 +123,12 @@ export default function Products() {
           <Dialog open={open} onOpenChange={(v) => { if (!v) closeDialog(); else setOpen(true); }}>
             <DialogTrigger asChild>
               <Button size="sm">
-                <Plus className="h-4 w-4 mr-1" /> New Product
+                <Plus className="h-4 w-4 mr-1" /> {t("products", "newProduct", lang)}
               </Button>
             </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingId ? "Edit Product" : "New Product"}</DialogTitle>
+              <DialogTitle>{editingId ? t("products", "editProduct", lang) : t("products", "newProduct", lang)}</DialogTitle>
             </DialogHeader>
             <form
               onSubmit={(e) => {
@@ -136,7 +138,7 @@ export default function Products() {
               className="space-y-4"
             >
               <div className="space-y-2">
-                <Label>Name</Label>
+                <Label>{t("products", "name", lang)}</Label>
                 <Input
                   required
                   value={form.name}
@@ -144,14 +146,14 @@ export default function Products() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Description</Label>
+                <Label>{t("products", "description", lang)}</Label>
                 <Input
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label>Unit Price</Label>
+                <Label>{t("products", "unitPrice", lang)}</Label>
                 <Input
                   type="number"
                   step="0.01"
@@ -161,7 +163,7 @@ export default function Products() {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={upsertMutation.isPending}>
-                {upsertMutation.isPending ? "Saving..." : editingId ? "Update Product" : "Create Product"}
+                {upsertMutation.isPending ? t("products", "saving", lang) : editingId ? t("products", "updateProduct", lang) : t("products", "createProduct", lang)}
               </Button>
             </form>
           </DialogContent>
@@ -170,10 +172,10 @@ export default function Products() {
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-muted-foreground">Loading...</p>
+        <p className="text-sm text-muted-foreground">{t("products", "loading", lang)}</p>
       ) : products.length === 0 ? (
         <Card>
-          <CardContent className="py-8 text-center text-muted-foreground">No products yet.</CardContent>
+          <CardContent className="py-8 text-center text-muted-foreground">{t("products", "noProducts", lang)}</CardContent>
         </Card>
       ) : (
         <div className="space-y-2">
@@ -183,7 +185,7 @@ export default function Products() {
                 <div>
                   <p className="font-medium">{p.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {p.description || "No description"} · ${Number(p.unit_price).toFixed(2)}
+                    {p.description || t("products", "noDescription", lang)} · ${Number(p.unit_price).toFixed(2)}
                   </p>
                 </div>
                 <div className="flex items-center gap-1">
@@ -194,7 +196,7 @@ export default function Products() {
                     variant="ghost"
                     size="icon"
                     onClick={() => {
-                      if (confirm("Delete this product?")) deleteMutation.mutate(p.id);
+                      if (confirm(t("products", "deleteConfirm", lang))) deleteMutation.mutate(p.id);
                     }}
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
