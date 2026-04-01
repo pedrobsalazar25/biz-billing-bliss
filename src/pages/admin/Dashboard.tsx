@@ -125,12 +125,13 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Dashboard</h2>
+      <h2 className="text-2xl font-bold">{t("dashboard", "title", lang)}</h2>
 
       <GettingStarted
         hasProfile={hasProfile}
         hasClient={clientCount > 0}
         hasSentInvoice={hasSentInvoice}
+        lang={lang}
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
