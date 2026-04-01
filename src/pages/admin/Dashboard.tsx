@@ -71,6 +71,7 @@ function GettingStarted({
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { lang } = useLanguage();
 
   const { data: invoices = [] } = useQuery({
     queryKey: ["invoices"],
