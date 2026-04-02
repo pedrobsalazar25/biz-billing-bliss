@@ -286,6 +286,107 @@ export type Database = {
         }
         Relationships: []
       }
+      recurring_invoice_line_items: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          quantity: number
+          recurring_invoice_id: string
+          sort_order: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          quantity?: number
+          recurring_invoice_id: string
+          sort_order?: number
+          unit_price?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          quantity?: number
+          recurring_invoice_id?: string
+          sort_order?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recurring_invoice_line_items_recurring_invoice_id_fkey"
+            columns: ["recurring_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "recurring_invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recurring_invoices: {
+        Row: {
+          business_profile_id: string | null
+          client_id: string | null
+          created_at: string
+          currency: string
+          frequency: Database["public"]["Enums"]["recurring_frequency"]
+          id: string
+          is_active: boolean
+          next_run_date: string
+          notes: string | null
+          tax_rate: number
+          terms: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_profile_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          currency?: string
+          frequency?: Database["public"]["Enums"]["recurring_frequency"]
+          id?: string
+          is_active?: boolean
+          next_run_date: string
+          notes?: string | null
+          tax_rate?: number
+          terms?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_profile_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          currency?: string
+          frequency?: Database["public"]["Enums"]["recurring_frequency"]
+          id?: string
+          is_active?: boolean
+          next_run_date?: string
+          notes?: string | null
+          tax_rate?: number
+          terms?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recurring_invoices_business_profile_id_fkey"
+            columns: ["business_profile_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recurring_invoices_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -295,6 +396,12 @@ export type Database = {
     }
     Enums: {
       invoice_status: "draft" | "sent" | "paid" | "void"
+      recurring_frequency:
+        | "weekly"
+        | "biweekly"
+        | "monthly"
+        | "quarterly"
+        | "yearly"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -423,6 +530,13 @@ export const Constants = {
   public: {
     Enums: {
       invoice_status: ["draft", "sent", "paid", "void"],
+      recurring_frequency: [
+        "weekly",
+        "biweekly",
+        "monthly",
+        "quarterly",
+        "yearly",
+      ],
     },
   },
 } as const
