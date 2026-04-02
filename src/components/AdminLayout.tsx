@@ -10,6 +10,7 @@ const navItems = [
   { to: "/admin/clients", icon: Users, labelKey: "clients" },
   { to: "/admin/products", icon: Package, labelKey: "products" },
   { to: "/admin/invoices", icon: FileText, labelKey: "invoices" },
+  { to: "/admin/recurring", icon: RefreshCw, labelKey: "recurring" },
   { to: "/admin/profile", icon: Building2, labelKey: "myBusiness" },
 ];
 
