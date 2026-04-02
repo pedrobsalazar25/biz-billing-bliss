@@ -89,6 +89,7 @@ const translations = {
     clients: { es: "Clientes", en: "Clients" },
     products: { es: "Productos", en: "Products" },
     invoices: { es: "Facturas", en: "Invoices" },
+    recurring: { es: "Recurrentes", en: "Recurring" },
     myBusiness: { es: "Mi Negocio", en: "My Business" },
     signOut: { es: "Cerrar Sesión", en: "Sign Out" },
     admin: { es: "Admin", en: "Admin" },
