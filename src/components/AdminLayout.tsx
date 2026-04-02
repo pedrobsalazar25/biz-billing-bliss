@@ -2,7 +2,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -10,6 +10,7 @@ const navItems = [
   { to: "/admin/clients", icon: Users, labelKey: "clients" },
   { to: "/admin/products", icon: Package, labelKey: "products" },
   { to: "/admin/invoices", icon: FileText, labelKey: "invoices" },
+  { to: "/admin/recurring", icon: RefreshCw, labelKey: "recurring" },
   { to: "/admin/profile", icon: Building2, labelKey: "myBusiness" },
 ];
 

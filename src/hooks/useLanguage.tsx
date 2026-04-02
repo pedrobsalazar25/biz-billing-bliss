@@ -89,6 +89,7 @@ const translations = {
     clients: { es: "Clientes", en: "Clients" },
     products: { es: "Productos", en: "Products" },
     invoices: { es: "Facturas", en: "Invoices" },
+    recurring: { es: "Recurrentes", en: "Recurring" },
     myBusiness: { es: "Mi Negocio", en: "My Business" },
     signOut: { es: "Cerrar Sesión", en: "Sign Out" },
     admin: { es: "Admin", en: "Admin" },
@@ -221,9 +222,35 @@ const translations = {
     saving: { es: "Guardando...", en: "Saving..." },
     saveProfile: { es: "Guardar Perfil", en: "Save Profile" },
   },
+  recurring: {
+    title: { es: "Facturas Recurrentes", en: "Recurring Invoices" },
+    new: { es: "Nueva Recurrente", en: "New Recurring" },
+    create: { es: "Crear Factura Recurrente", en: "Create Recurring Invoice" },
+    client: { es: "Cliente", en: "Client" },
+    selectClient: { es: "Seleccionar cliente", en: "Select client" },
+    frequency: { es: "Frecuencia", en: "Frequency" },
+    weekly: { es: "Semanal", en: "Weekly" },
+    biweekly: { es: "Quincenal", en: "Biweekly" },
+    monthly: { es: "Mensual", en: "Monthly" },
+    quarterly: { es: "Trimestral", en: "Quarterly" },
+    yearly: { es: "Anual", en: "Yearly" },
+    nextRunDate: { es: "Próxima Fecha", en: "Next Run Date" },
+    taxRate: { es: "Tasa de Impuesto (%)", en: "Tax Rate (%)" },
+    notes: { es: "Notas", en: "Notes" },
+    creating: { es: "Creando...", en: "Creating..." },
+    created: { es: "Factura recurrente creada", en: "Recurring invoice created" },
+    deleted: { es: "Factura recurrente eliminada", en: "Recurring invoice deleted" },
+    loading: { es: "Cargando...", en: "Loading..." },
+    noItems: { es: "Aún no hay facturas recurrentes.", en: "No recurring invoices yet." },
+    noClient: { es: "Sin cliente", en: "No client" },
+    nextLabel: { es: "Próxima", en: "Next" },
+    active: { es: "Activa", en: "Active" },
+    paused: { es: "Pausada", en: "Paused" },
+    deleteConfirm: { es: "¿Eliminar esta factura recurrente?", en: "Delete this recurring invoice?" },
+  },
 } as const;
 
-export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile", key: string, lang: Lang): string {
+export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile" | "recurring", key: string, lang: Lang): string {
   const s = translations[section] as any;
   const entry = s[key];
   if (!entry) return key;
