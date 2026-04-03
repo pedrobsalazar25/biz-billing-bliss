@@ -283,7 +283,7 @@ const translations = {
   },
 } as const;
 
-export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile" | "recurring", key: string, lang: Lang): string {
+export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile" | "expenses" | "recurring", key: string, lang: Lang): string {
   const s = translations[section] as any;
   const entry = s[key];
   if (!entry) return key;
