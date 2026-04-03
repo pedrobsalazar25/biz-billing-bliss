@@ -84,6 +84,9 @@ export default function AdminLayout() {
                 <item.icon className="h-4 w-4" />
               </NavLink>
             ))}
+            <button onClick={toggleTheme} className="p-2 text-muted-foreground">
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
             <button onClick={toggleLang} className="p-2 text-muted-foreground">
               <Globe className="h-4 w-4" />
             </button>
