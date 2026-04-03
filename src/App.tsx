@@ -17,6 +17,7 @@ import InvoiceDetail from "./pages/admin/InvoiceDetail";
 import Products from "./pages/admin/Products";
 import RecurringInvoices from "./pages/admin/RecurringInvoices";
 import Expenses from "./pages/admin/Expenses";
+import Reports from "./pages/admin/Reports";
 import BusinessProfile from "./pages/admin/BusinessProfile";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="invoices/:id" element={<InvoiceDetail />} />
               <Route path="recurring" element={<RecurringInvoices />} />
               <Route path="expenses" element={<Expenses />} />
+              <Route path="reports" element={<Reports />} />
               <Route path="profile" element={<BusinessProfile />} />
             </Route>
             <Route path="*" element={<NotFound />} />

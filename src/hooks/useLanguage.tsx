@@ -91,6 +91,7 @@ const translations = {
     invoices: { es: "Facturas", en: "Invoices" },
     recurring: { es: "Recurrentes", en: "Recurring" },
     expenses: { es: "Gastos", en: "Expenses" },
+    reports: { es: "Reportes", en: "Reports" },
     myBusiness: { es: "Mi Negocio", en: "My Business" },
     signOut: { es: "Cerrar Sesión", en: "Sign Out" },
     admin: { es: "Admin", en: "Admin" },
@@ -282,9 +283,21 @@ const translations = {
     paused: { es: "Pausada", en: "Paused" },
     deleteConfirm: { es: "¿Eliminar esta factura recurrente?", en: "Delete this recurring invoice?" },
   },
+  reports: {
+    title: { es: "Reportes y Análisis", en: "Reports & Analytics" },
+    totalRevenue: { es: "Ingresos Totales", en: "Total Revenue" },
+    totalExpenses: { es: "Gastos Totales", en: "Total Expenses" },
+    netProfit: { es: "Ganancia Neta", en: "Net Profit" },
+    monthlyOverview: { es: "Resumen Mensual", en: "Monthly Overview" },
+    revenue: { es: "Ingresos", en: "Revenue" },
+    expenses: { es: "Gastos", en: "Expenses" },
+    expensesByCategory: { es: "Gastos por Categoría", en: "Expenses by Category" },
+    invoiceStatus: { es: "Estado de Facturas", en: "Invoice Status" },
+    noData: { es: "Aún no hay datos para mostrar.", en: "No data to display yet." },
+  },
 } as const;
 
-export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile" | "expenses" | "recurring", key: string, lang: Lang): string {
+export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile" | "expenses" | "recurring" | "reports", key: string, lang: Lang): string {
   const s = translations[section] as any;
   const entry = s[key];
   if (!entry) return key;
