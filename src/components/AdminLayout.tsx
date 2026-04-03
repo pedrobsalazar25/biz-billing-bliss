@@ -19,6 +19,7 @@ const navItems = [
 export default function AdminLayout() {
   const { signOut } = useAuth();
   const { lang, toggleLang } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
