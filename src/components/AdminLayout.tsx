@@ -52,6 +52,10 @@ export default function AdminLayout() {
             </NavLink>
           ))}
         </nav>
+        <Button variant="ghost" size="sm" onClick={toggleTheme} className="justify-start gap-2">
+          {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          {theme === "dark" ? (lang === "es" ? "Modo Claro" : "Light Mode") : (lang === "es" ? "Modo Oscuro" : "Dark Mode")}
+        </Button>
         <Button variant="ghost" size="sm" onClick={toggleLang} className="justify-start gap-2">
           <Globe className="h-4 w-4" /> {lang === "es" ? "English" : "Español"}
         </Button>
