@@ -1,8 +1,9 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
+import { useTheme } from "@/hooks/useTheme";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe, RefreshCw, Receipt } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe, RefreshCw, Receipt, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -18,6 +19,7 @@ const navItems = [
 export default function AdminLayout() {
   const { signOut } = useAuth();
   const { lang, toggleLang } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -50,6 +52,10 @@ export default function AdminLayout() {
             </NavLink>
           ))}
         </nav>
+        <Button variant="ghost" size="sm" onClick={toggleTheme} className="justify-start gap-2">
+          {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          {theme === "dark" ? (lang === "es" ? "Modo Claro" : "Light Mode") : (lang === "es" ? "Modo Oscuro" : "Dark Mode")}
+        </Button>
         <Button variant="ghost" size="sm" onClick={toggleLang} className="justify-start gap-2">
           <Globe className="h-4 w-4" /> {lang === "es" ? "English" : "Español"}
         </Button>
@@ -78,6 +84,9 @@ export default function AdminLayout() {
                 <item.icon className="h-4 w-4" />
               </NavLink>
             ))}
+            <button onClick={toggleTheme} className="p-2 text-muted-foreground">
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
             <button onClick={toggleLang} className="p-2 text-muted-foreground">
               <Globe className="h-4 w-4" />
             </button>
