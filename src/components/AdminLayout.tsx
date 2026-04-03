@@ -13,6 +13,7 @@ const navItems = [
   { to: "/admin/invoices", icon: FileText, labelKey: "invoices" },
   { to: "/admin/recurring", icon: RefreshCw, labelKey: "recurring" },
   { to: "/admin/expenses", icon: Receipt, labelKey: "expenses" },
+  { to: "/admin/reports", icon: BarChart3, labelKey: "reports" },
   { to: "/admin/profile", icon: Building2, labelKey: "myBusiness" },
 ];
 

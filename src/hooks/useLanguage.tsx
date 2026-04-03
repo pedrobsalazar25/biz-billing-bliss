@@ -91,6 +91,7 @@ const translations = {
     invoices: { es: "Facturas", en: "Invoices" },
     recurring: { es: "Recurrentes", en: "Recurring" },
     expenses: { es: "Gastos", en: "Expenses" },
+    reports: { es: "Reportes", en: "Reports" },
     myBusiness: { es: "Mi Negocio", en: "My Business" },
     signOut: { es: "Cerrar Sesión", en: "Sign Out" },
     admin: { es: "Admin", en: "Admin" },

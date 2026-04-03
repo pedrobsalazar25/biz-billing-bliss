@@ -50,6 +50,7 @@ const App = () => (
               <Route path="invoices/:id" element={<InvoiceDetail />} />
               <Route path="recurring" element={<RecurringInvoices />} />
               <Route path="expenses" element={<Expenses />} />
+              <Route path="reports" element={<Reports />} />
               <Route path="profile" element={<BusinessProfile />} />
             </Route>
             <Route path="*" element={<NotFound />} />
