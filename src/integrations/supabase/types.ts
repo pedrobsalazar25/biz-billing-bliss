@@ -128,6 +128,48 @@ export type Database = {
         }
         Relationships: []
       }
+      expenses: {
+        Row: {
+          amount: number
+          category: Database["public"]["Enums"]["expense_category"]
+          created_at: string
+          description: string
+          expense_date: string
+          id: string
+          notes: string | null
+          receipt_url: string | null
+          updated_at: string
+          user_id: string
+          vendor: string | null
+        }
+        Insert: {
+          amount?: number
+          category?: Database["public"]["Enums"]["expense_category"]
+          created_at?: string
+          description: string
+          expense_date?: string
+          id?: string
+          notes?: string | null
+          receipt_url?: string | null
+          updated_at?: string
+          user_id: string
+          vendor?: string | null
+        }
+        Update: {
+          amount?: number
+          category?: Database["public"]["Enums"]["expense_category"]
+          created_at?: string
+          description?: string
+          expense_date?: string
+          id?: string
+          notes?: string | null
+          receipt_url?: string | null
+          updated_at?: string
+          user_id?: string
+          vendor?: string | null
+        }
+        Relationships: []
+      }
       invoice_line_items: {
         Row: {
           amount: number
@@ -395,6 +437,18 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      expense_category:
+        | "office_supplies"
+        | "travel"
+        | "utilities"
+        | "rent"
+        | "software"
+        | "marketing"
+        | "insurance"
+        | "professional_services"
+        | "meals"
+        | "equipment"
+        | "other"
       invoice_status: "draft" | "sent" | "paid" | "void"
       recurring_frequency:
         | "weekly"
@@ -529,6 +583,19 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      expense_category: [
+        "office_supplies",
+        "travel",
+        "utilities",
+        "rent",
+        "software",
+        "marketing",
+        "insurance",
+        "professional_services",
+        "meals",
+        "equipment",
+        "other",
+      ],
       invoice_status: ["draft", "sent", "paid", "void"],
       recurring_frequency: [
         "weekly",
