@@ -215,7 +215,8 @@ const Invoice = ({ data }: InvoiceProps) => {
       {/* Action Buttons - Desktop */}
       <div className="no-print hidden md:flex flex-wrap justify-center gap-3">
         <button
-          onClick={handlePrint}
+          onClick={handleDownloadPdf}
+          disabled={isGeneratingPdf}
           className="flex items-center gap-2 bg-invoice-dark hover:bg-invoice-dark/90 text-primary-foreground px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
