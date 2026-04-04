@@ -101,6 +101,8 @@ const Invoice = ({ data }: InvoiceProps) => {
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedItems, setTranslatedItems] = useState<Record<number, string> | null>(null);
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
   const texts = language === "en" ? englishTexts : spanishTexts;
 
