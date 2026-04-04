@@ -191,6 +191,8 @@ const translations = {
     total: { es: "Total", en: "Total" },
     removeConfirm: { es: "¿Eliminar este producto?", en: "Remove this product?" },
     descriptionRequired: { es: "La descripción es obligatoria", en: "Description is required" },
+    downloadPdf: { es: "Descargar PDF", en: "Download PDF" },
+    noClient: { es: "Sin cliente", en: "No client" },
   },
   profile: {
     title: { es: "Perfil de Negocio", en: "Business Profile" },

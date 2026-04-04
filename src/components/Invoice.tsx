@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import { ChevronDown } from "lucide-react";
+import { generatePdf } from "@/lib/generatePdf";
 
 type Language = "en" | "es";
 
@@ -100,6 +101,8 @@ const Invoice = ({ data }: InvoiceProps) => {
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedItems, setTranslatedItems] = useState<Record<number, string> | null>(null);
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
   const texts = language === "en" ? englishTexts : spanishTexts;
 
@@ -137,8 +140,17 @@ const Invoice = ({ data }: InvoiceProps) => {
     0
   );
 
-  const handlePrint = () => {
-    window.print();
+  const handleDownloadPdf = async () => {
+    if (!invoiceRef.current || isGeneratingPdf) return;
+    setIsGeneratingPdf(true);
+    try {
+      await generatePdf(invoiceRef.current, `invoice-${invoiceData.invoiceNumber}`);
+      toast.success(language === "en" ? "PDF downloaded!" : "¡PDF descargado!");
+    } catch {
+      toast.error("Failed to generate PDF");
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   const toggleExpanded = (index: number) => {
@@ -203,7 +215,8 @@ const Invoice = ({ data }: InvoiceProps) => {
       {/* Action Buttons - Desktop */}
       <div className="no-print hidden md:flex flex-wrap justify-center gap-3">
         <button
-          onClick={handlePrint}
+          onClick={handleDownloadPdf}
+          disabled={isGeneratingPdf}
           className="flex items-center gap-2 bg-invoice-dark hover:bg-invoice-dark/90 text-primary-foreground px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -274,14 +287,14 @@ const Invoice = ({ data }: InvoiceProps) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
           </svg>
         </button>
-        <button onClick={handlePrint} className="flex flex-col items-center justify-center text-foreground active:scale-95 transition-transform">
+        <button onClick={handleDownloadPdf} disabled={isGeneratingPdf} className="flex flex-col items-center justify-center text-foreground active:scale-95 transition-transform disabled:opacity-50">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
           </svg>
         </button>
       </div>
 
-      <div className="w-full max-w-3xl bg-card shadow-2xl rounded-2xl overflow-hidden print-container">
+      <div ref={invoiceRef} className="w-full max-w-3xl bg-card shadow-2xl rounded-2xl overflow-hidden print-container">
         {/* Header */}
         <div className="invoice-header-bg px-6 py-8 md:px-10 md:py-10 relative">
           <div className="flex justify-between items-start">

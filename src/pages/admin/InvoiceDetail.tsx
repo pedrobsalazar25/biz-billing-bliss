@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Plus, Pencil, Trash2, Copy, Send, MessageCircle } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Copy, Send, MessageCircle, Download } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 
@@ -221,6 +221,14 @@ export default function InvoiceDetail() {
           const waMsg = encodeURIComponent(`Hi ${clientName}, here is your invoice ${invoice.invoice_number}:\n${publicUrl}`);
           return (
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+              <Button
+                variant="default"
+                size="sm"
+                className="h-7 shrink-0"
+                onClick={() => window.open(publicUrl, '_blank')}
+              >
+                <Download className="h-3.5 w-3.5 mr-1" /> {t("invoiceDetail", "downloadPdf", lang)}
+              </Button>
               <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate max-w-full sm:max-w-[300px] block">
                 {publicUrl}
               </code>
