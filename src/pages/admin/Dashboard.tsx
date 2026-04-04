@@ -85,6 +85,9 @@ export default function Dashboard() {
   const { lang } = useLanguage();
   const monthNames = lang === "es" ? MONTHS_ES : MONTHS_EN;
 
+  const [dateFrom, setDateFrom] = useState<Date>(() => startOfMonth(subMonths(new Date(), 5)));
+  const [dateTo, setDateTo] = useState<Date>(() => endOfMonth(new Date()));
+
   const { data: allInvoices = [] } = useQuery({
     queryKey: ["all-invoices-dashboard"],
     queryFn: async () => {
@@ -133,44 +136,62 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
-  const recentInvoices = allInvoices.slice(0, 10);
+  // Filter data by date range
+  const interval = { start: dateFrom, end: dateTo };
+
+  const filteredInvoices = useMemo(
+    () => allInvoices.filter((i) => {
+      const d = new Date(i.issue_date);
+      return isWithinInterval(d, interval);
+    }),
+    [allInvoices, dateFrom, dateTo]
+  );
+
+  const filteredExpenses = useMemo(
+    () => expenses.filter((e) => {
+      const d = new Date(e.expense_date);
+      return isWithinInterval(d, interval);
+    }),
+    [expenses, dateFrom, dateTo]
+  );
+
+  const recentInvoices = filteredInvoices.slice(0, 10);
   const hasSentInvoice = allInvoices.some((i) => i.status === "sent" || i.status === "paid");
-  const totalPaid = allInvoices
+  const totalPaid = filteredInvoices
     .filter((i) => i.status === "paid")
     .reduce((sum, i) => sum + Number(i.total), 0);
-  const totalExpenses = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+  const totalExpenses = filteredExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
-  // Monthly revenue & expenses for the last 6 months
+  // Monthly data based on date range
   const monthlyData = useMemo(() => {
-    const now = new Date();
-    const months: { key: string; label: string; revenue: number; expenses: number }[] = [];
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-      months.push({ key, label: monthNames[d.getMonth()], revenue: 0, expenses: 0 });
-    }
-    allInvoices.forEach((inv) => {
+    const monthStarts = eachMonthOfInterval({ start: dateFrom, end: dateTo });
+    const months = monthStarts.map((d) => ({
+      key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+      label: monthNames[d.getMonth()],
+      revenue: 0,
+      expenses: 0,
+    }));
+    filteredInvoices.forEach((inv) => {
       if (inv.status !== "paid") return;
       const m = inv.issue_date?.substring(0, 7);
       const entry = months.find((e) => e.key === m);
       if (entry) entry.revenue += Number(inv.total);
     });
-    expenses.forEach((exp) => {
+    filteredExpenses.forEach((exp) => {
       const m = exp.expense_date?.substring(0, 7);
       const entry = months.find((e) => e.key === m);
       if (entry) entry.expenses += Number(exp.amount);
     });
     return months;
-  }, [allInvoices, expenses, monthNames]);
+  }, [filteredInvoices, filteredExpenses, dateFrom, dateTo, monthNames]);
 
-  // Invoice status breakdown
   const statusData = useMemo(() => {
     const counts: Record<string, number> = { draft: 0, sent: 0, paid: 0, void: 0 };
-    allInvoices.forEach((i) => { counts[i.status] = (counts[i.status] || 0) + 1; });
+    filteredInvoices.forEach((i) => { counts[i.status] = (counts[i.status] || 0) + 1; });
     return Object.entries(counts)
       .filter(([, v]) => v > 0)
       .map(([name, value]) => ({ name, value }));
-  }, [allInvoices]);
+  }, [filteredInvoices]);
 
   const statusColor: Record<string, string> = {
     draft: "secondary",
@@ -180,6 +201,13 @@ export default function Dashboard() {
   };
 
   const netProfit = totalPaid - totalExpenses;
+
+  const presetRanges = [
+    { label: lang === "es" ? "Este mes" : "This month", from: startOfMonth(new Date()), to: endOfMonth(new Date()) },
+    { label: lang === "es" ? "Últimos 3 meses" : "Last 3 months", from: startOfMonth(subMonths(new Date(), 2)), to: endOfMonth(new Date()) },
+    { label: lang === "es" ? "Últimos 6 meses" : "Last 6 months", from: startOfMonth(subMonths(new Date(), 5)), to: endOfMonth(new Date()) },
+    { label: lang === "es" ? "Este año" : "This year", from: new Date(new Date().getFullYear(), 0, 1), to: endOfMonth(new Date()) },
+  ];
 
   return (
     <div className="space-y-6">
