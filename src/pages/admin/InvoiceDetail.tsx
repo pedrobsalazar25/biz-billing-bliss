@@ -213,7 +213,19 @@ export default function InvoiceDetail() {
             </p>
           </div>
         </div>
-        {invoice.public_share_slug && (() => {
+        {invoice.public_share_slug && (
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+            <Button
+              variant="default"
+              size="sm"
+              className="h-7 shrink-0"
+              onClick={() => {
+                const url = `${window.location.origin}/i/${invoice.public_share_slug}`;
+                window.open(url, '_blank');
+              }}
+            >
+              <Download className="h-3.5 w-3.5 mr-1" /> {t("invoiceDetail", "downloadPdf", lang)}
+            </Button>
           const publicUrl = `${window.location.origin}/i/${invoice.public_share_slug}`;
           const clientName = (invoice.clients as any)?.name ?? "Client";
           const emailSubject = encodeURIComponent(`Invoice ${invoice.invoice_number}`);
