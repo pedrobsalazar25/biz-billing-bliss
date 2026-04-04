@@ -109,6 +109,12 @@ const translations = {
     recentInvoices: { es: "Facturas Recientes", en: "Recent Invoices" },
     noInvoices: { es: "Aún no hay facturas.", en: "No invoices yet." },
     noClient: { es: "Sin cliente", en: "No client" },
+    netProfit: { es: "Ganancia Neta", en: "Net Profit" },
+    revenueVsExpenses: { es: "Ingresos vs Gastos", en: "Revenue vs Expenses" },
+    revenue: { es: "Ingresos", en: "Revenue" },
+    expensesLabel: { es: "Gastos", en: "Expenses" },
+    invoiceStatus: { es: "Estado de Facturas", en: "Invoice Status" },
+    revenueTrend: { es: "Tendencia de Ingresos", en: "Revenue Trend" },
   },
   clients: {
     title: { es: "Clientes", en: "Clients" },
