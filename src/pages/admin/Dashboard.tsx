@@ -211,7 +211,42 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">{t("dashboard", "title", lang)}</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h2 className="text-2xl font-bold">{t("dashboard", "title", lang)}</h2>
+        <div className="flex flex-wrap items-center gap-2">
+          {presetRanges.map((r) => (
+            <Button
+              key={r.label}
+              variant={dateFrom.getTime() === r.from.getTime() && dateTo.getTime() === r.to.getTime() ? "default" : "outline"}
+              size="sm"
+              className="h-7 text-xs"
+              onClick={() => { setDateFrom(r.from); setDateTo(r.to); }}
+            >
+              {r.label}
+            </Button>
+          ))}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
+                <CalendarIcon className="h-3 w-3" />
+                {format(dateFrom, "MMM d")} – {format(dateTo, "MMM d, yyyy")}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar
+                mode="range"
+                selected={{ from: dateFrom, to: dateTo }}
+                onSelect={(range) => {
+                  if (range?.from) setDateFrom(range.from);
+                  if (range?.to) setDateTo(range.to);
+                }}
+                numberOfMonths={2}
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
 
       <GettingStarted
         hasProfile={hasProfile}
