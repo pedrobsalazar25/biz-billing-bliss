@@ -1,12 +1,17 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Link } from "react-router-dom";
-import { FileText, Users, DollarSign, CheckCircle2, Circle, ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
+import { FileText, Users, CheckCircle2, Circle, ArrowRight, TrendingUp, TrendingDown, CalendarIcon } from "lucide-react";
+import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, eachMonthOfInterval } from "date-fns";
+import { cn } from "@/lib/utils";
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
@@ -80,6 +85,9 @@ export default function Dashboard() {
   const { lang } = useLanguage();
   const monthNames = lang === "es" ? MONTHS_ES : MONTHS_EN;
 
+  const [dateFrom, setDateFrom] = useState<Date>(() => startOfMonth(subMonths(new Date(), 5)));
+  const [dateTo, setDateTo] = useState<Date>(() => endOfMonth(new Date()));
+
   const { data: allInvoices = [] } = useQuery({
     queryKey: ["all-invoices-dashboard"],
     queryFn: async () => {
@@ -128,44 +136,62 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
-  const recentInvoices = allInvoices.slice(0, 10);
+  // Filter data by date range
+  const interval = { start: dateFrom, end: dateTo };
+
+  const filteredInvoices = useMemo(
+    () => allInvoices.filter((i) => {
+      const d = new Date(i.issue_date);
+      return isWithinInterval(d, interval);
+    }),
+    [allInvoices, dateFrom, dateTo]
+  );
+
+  const filteredExpenses = useMemo(
+    () => expenses.filter((e) => {
+      const d = new Date(e.expense_date);
+      return isWithinInterval(d, interval);
+    }),
+    [expenses, dateFrom, dateTo]
+  );
+
+  const recentInvoices = filteredInvoices.slice(0, 10);
   const hasSentInvoice = allInvoices.some((i) => i.status === "sent" || i.status === "paid");
-  const totalPaid = allInvoices
+  const totalPaid = filteredInvoices
     .filter((i) => i.status === "paid")
     .reduce((sum, i) => sum + Number(i.total), 0);
-  const totalExpenses = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+  const totalExpenses = filteredExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
-  // Monthly revenue & expenses for the last 6 months
+  // Monthly data based on date range
   const monthlyData = useMemo(() => {
-    const now = new Date();
-    const months: { key: string; label: string; revenue: number; expenses: number }[] = [];
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-      months.push({ key, label: monthNames[d.getMonth()], revenue: 0, expenses: 0 });
-    }
-    allInvoices.forEach((inv) => {
+    const monthStarts = eachMonthOfInterval({ start: dateFrom, end: dateTo });
+    const months = monthStarts.map((d) => ({
+      key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+      label: monthNames[d.getMonth()],
+      revenue: 0,
+      expenses: 0,
+    }));
+    filteredInvoices.forEach((inv) => {
       if (inv.status !== "paid") return;
       const m = inv.issue_date?.substring(0, 7);
       const entry = months.find((e) => e.key === m);
       if (entry) entry.revenue += Number(inv.total);
     });
-    expenses.forEach((exp) => {
+    filteredExpenses.forEach((exp) => {
       const m = exp.expense_date?.substring(0, 7);
       const entry = months.find((e) => e.key === m);
       if (entry) entry.expenses += Number(exp.amount);
     });
     return months;
-  }, [allInvoices, expenses, monthNames]);
+  }, [filteredInvoices, filteredExpenses, dateFrom, dateTo, monthNames]);
 
-  // Invoice status breakdown
   const statusData = useMemo(() => {
     const counts: Record<string, number> = { draft: 0, sent: 0, paid: 0, void: 0 };
-    allInvoices.forEach((i) => { counts[i.status] = (counts[i.status] || 0) + 1; });
+    filteredInvoices.forEach((i) => { counts[i.status] = (counts[i.status] || 0) + 1; });
     return Object.entries(counts)
       .filter(([, v]) => v > 0)
       .map(([name, value]) => ({ name, value }));
-  }, [allInvoices]);
+  }, [filteredInvoices]);
 
   const statusColor: Record<string, string> = {
     draft: "secondary",
@@ -176,9 +202,51 @@ export default function Dashboard() {
 
   const netProfit = totalPaid - totalExpenses;
 
+  const presetRanges = [
+    { label: lang === "es" ? "Este mes" : "This month", from: startOfMonth(new Date()), to: endOfMonth(new Date()) },
+    { label: lang === "es" ? "Últimos 3 meses" : "Last 3 months", from: startOfMonth(subMonths(new Date(), 2)), to: endOfMonth(new Date()) },
+    { label: lang === "es" ? "Últimos 6 meses" : "Last 6 months", from: startOfMonth(subMonths(new Date(), 5)), to: endOfMonth(new Date()) },
+    { label: lang === "es" ? "Este año" : "This year", from: new Date(new Date().getFullYear(), 0, 1), to: endOfMonth(new Date()) },
+  ];
+
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">{t("dashboard", "title", lang)}</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h2 className="text-2xl font-bold">{t("dashboard", "title", lang)}</h2>
+        <div className="flex flex-wrap items-center gap-2">
+          {presetRanges.map((r) => (
+            <Button
+              key={r.label}
+              variant={dateFrom.getTime() === r.from.getTime() && dateTo.getTime() === r.to.getTime() ? "default" : "outline"}
+              size="sm"
+              className="h-7 text-xs"
+              onClick={() => { setDateFrom(r.from); setDateTo(r.to); }}
+            >
+              {r.label}
+            </Button>
+          ))}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
+                <CalendarIcon className="h-3 w-3" />
+                {format(dateFrom, "MMM d")} – {format(dateTo, "MMM d, yyyy")}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar
+                mode="range"
+                selected={{ from: dateFrom, to: dateTo }}
+                onSelect={(range) => {
+                  if (range?.from) setDateFrom(range.from);
+                  if (range?.to) setDateTo(range.to);
+                }}
+                numberOfMonths={2}
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
 
       <GettingStarted
         hasProfile={hasProfile}
