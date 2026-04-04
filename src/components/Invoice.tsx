@@ -294,7 +294,7 @@ const Invoice = ({ data }: InvoiceProps) => {
         </button>
       </div>
 
-      <div className="w-full max-w-3xl bg-card shadow-2xl rounded-2xl overflow-hidden print-container">
+      <div ref={invoiceRef} className="w-full max-w-3xl bg-card shadow-2xl rounded-2xl overflow-hidden print-container">
         {/* Header */}
         <div className="invoice-header-bg px-6 py-8 md:px-10 md:py-10 relative">
           <div className="flex justify-between items-start">
