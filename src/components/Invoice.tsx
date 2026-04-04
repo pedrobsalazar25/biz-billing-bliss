@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import { ChevronDown } from "lucide-react";
+import { generatePdf } from "@/lib/generatePdf";
 
 type Language = "en" | "es";
 
