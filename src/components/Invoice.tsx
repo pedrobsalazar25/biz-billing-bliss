@@ -140,8 +140,17 @@ const Invoice = ({ data }: InvoiceProps) => {
     0
   );
 
-  const handlePrint = () => {
-    window.print();
+  const handleDownloadPdf = async () => {
+    if (!invoiceRef.current || isGeneratingPdf) return;
+    setIsGeneratingPdf(true);
+    try {
+      await generatePdf(invoiceRef.current, `invoice-${invoiceData.invoiceNumber}`);
+      toast.success(language === "en" ? "PDF downloaded!" : "¡PDF descargado!");
+    } catch {
+      toast.error("Failed to generate PDF");
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   const toggleExpanded = (index: number) => {
