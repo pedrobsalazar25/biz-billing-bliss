@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Plus, Pencil, Trash2, Copy, Send, MessageCircle } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Copy, Send, MessageCircle, Download } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 
