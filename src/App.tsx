@@ -19,6 +19,7 @@ import RecurringInvoices from "./pages/admin/RecurringInvoices";
 import Expenses from "./pages/admin/Expenses";
 import Reports from "./pages/admin/Reports";
 import BusinessProfile from "./pages/admin/BusinessProfile";
+import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/i/:slug" element={<PublicInvoice />} />
+            <Route path="/install" element={<Install />} />
             <Route
               path="/admin"
               element={
