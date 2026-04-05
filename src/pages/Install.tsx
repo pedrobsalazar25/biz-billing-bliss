@@ -112,10 +112,10 @@ const Install = () => {
         </div>
 
         {isInstalled ? (
-          <Card className="border-green-500/50 bg-green-500/10">
+          <Card className="border-primary/50 bg-primary/10">
             <CardContent className="pt-6 text-center space-y-2">
-              <Download className="mx-auto h-10 w-10 text-green-600" />
-              <p className="font-semibold text-green-700">{t.installed[lang]}</p>
+              <Download className="mx-auto h-10 w-10 text-primary" />
+              <p className="font-semibold text-foreground">{t.installed[lang]}</p>
               <p className="text-sm text-muted-foreground">{t.installedDesc[lang]}</p>
             </CardContent>
           </Card>
