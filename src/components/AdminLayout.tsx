@@ -1,9 +1,11 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 import { useTheme } from "@/hooks/useTheme";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe, RefreshCw, Receipt, Moon, Sun, BarChart3, ClipboardList } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe, RefreshCw, Receipt, Moon, Sun, BarChart3, ClipboardList, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
