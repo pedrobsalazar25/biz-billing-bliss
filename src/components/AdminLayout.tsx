@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 import { useTheme } from "@/hooks/useTheme";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe, RefreshCw, Receipt, Moon, Sun, BarChart3 } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe, RefreshCw, Receipt, Moon, Sun, BarChart3, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
