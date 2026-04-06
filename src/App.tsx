@@ -21,7 +21,7 @@ import Reports from "./pages/admin/Reports";
 import Estimates from "./pages/admin/Estimates";
 import EstimateDetail from "./pages/admin/EstimateDetail";
 import BusinessProfile from "./pages/admin/BusinessProfile";
-import Install from "./pages/Install";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,7 +38,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/i/:slug" element={<PublicInvoice />} />
-            <Route path="/install" element={<Install />} />
+            
             <Route
               path="/admin"
               element={
