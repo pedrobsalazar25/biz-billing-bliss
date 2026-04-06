@@ -13,6 +13,12 @@ import slide4 from "@/assets/onboarding-4.jpeg";
 const images = [slide1, slide2, slide3, slide4];
 
 export default function Index() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!authLoading && user) navigate("/admin", { replace: true });
+  }, [user, authLoading, navigate]);
+
   const [current, setCurrent] = useState(0);
   const touchStart = useRef<number | null>(null);
   const { lang, toggleLang } = useLanguage();
