@@ -11,6 +11,7 @@ const navItems = [
   { to: "/admin/clients", icon: Users, labelKey: "clients" },
   { to: "/admin/products", icon: Package, labelKey: "products" },
   { to: "/admin/invoices", icon: FileText, labelKey: "invoices" },
+  { to: "/admin/estimates", icon: ClipboardList, labelKey: "estimates" },
   { to: "/admin/recurring", icon: RefreshCw, labelKey: "recurring" },
   { to: "/admin/expenses", icon: Receipt, labelKey: "expenses" },
   { to: "/admin/reports", icon: BarChart3, labelKey: "reports" },
