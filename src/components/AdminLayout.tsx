@@ -25,6 +25,8 @@ export default function AdminLayout() {
   const { lang, toggleLang } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
