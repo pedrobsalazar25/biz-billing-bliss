@@ -128,6 +128,135 @@ export type Database = {
         }
         Relationships: []
       }
+      estimate_line_items: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          estimate_id: string
+          id: string
+          quantity: number
+          sort_order: number
+          unit_price: number
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          description: string
+          estimate_id: string
+          id?: string
+          quantity?: number
+          sort_order?: number
+          unit_price?: number
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          estimate_id?: string
+          id?: string
+          quantity?: number
+          sort_order?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estimate_line_items_estimate_id_fkey"
+            columns: ["estimate_id"]
+            isOneToOne: false
+            referencedRelation: "estimates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      estimates: {
+        Row: {
+          business_profile_id: string | null
+          client_id: string | null
+          converted_invoice_id: string | null
+          created_at: string
+          currency: string
+          discount_amount: number
+          estimate_number: string
+          id: string
+          issue_date: string
+          notes: string | null
+          status: Database["public"]["Enums"]["estimate_status"]
+          subtotal: number
+          tax_amount: number
+          tax_rate: number
+          terms: string | null
+          total: number
+          updated_at: string
+          user_id: string
+          valid_until: string | null
+        }
+        Insert: {
+          business_profile_id?: string | null
+          client_id?: string | null
+          converted_invoice_id?: string | null
+          created_at?: string
+          currency?: string
+          discount_amount?: number
+          estimate_number: string
+          id?: string
+          issue_date?: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["estimate_status"]
+          subtotal?: number
+          tax_amount?: number
+          tax_rate?: number
+          terms?: string | null
+          total?: number
+          updated_at?: string
+          user_id: string
+          valid_until?: string | null
+        }
+        Update: {
+          business_profile_id?: string | null
+          client_id?: string | null
+          converted_invoice_id?: string | null
+          created_at?: string
+          currency?: string
+          discount_amount?: number
+          estimate_number?: string
+          id?: string
+          issue_date?: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["estimate_status"]
+          subtotal?: number
+          tax_amount?: number
+          tax_rate?: number
+          terms?: string | null
+          total?: number
+          updated_at?: string
+          user_id?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estimates_business_profile_id_fkey"
+            columns: ["business_profile_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estimates_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estimates_converted_invoice_id_fkey"
+            columns: ["converted_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       expenses: {
         Row: {
           amount: number
@@ -437,6 +566,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      estimate_status: "draft" | "sent" | "approved" | "rejected" | "converted"
       expense_category:
         | "office_supplies"
         | "travel"
@@ -583,6 +713,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      estimate_status: ["draft", "sent", "approved", "rejected", "converted"],
       expense_category: [
         "office_supplies",
         "travel",
