@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 import { useTheme } from "@/hooks/useTheme";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe, RefreshCw, Receipt, Moon, Sun, BarChart3 } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Package, Building2, LogOut, Globe, RefreshCw, Receipt, Moon, Sun, BarChart3, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -11,6 +11,7 @@ const navItems = [
   { to: "/admin/clients", icon: Users, labelKey: "clients" },
   { to: "/admin/products", icon: Package, labelKey: "products" },
   { to: "/admin/invoices", icon: FileText, labelKey: "invoices" },
+  { to: "/admin/estimates", icon: ClipboardList, labelKey: "estimates" },
   { to: "/admin/recurring", icon: RefreshCw, labelKey: "recurring" },
   { to: "/admin/expenses", icon: Receipt, labelKey: "expenses" },
   { to: "/admin/reports", icon: BarChart3, labelKey: "reports" },

@@ -18,6 +18,8 @@ import Products from "./pages/admin/Products";
 import RecurringInvoices from "./pages/admin/RecurringInvoices";
 import Expenses from "./pages/admin/Expenses";
 import Reports from "./pages/admin/Reports";
+import Estimates from "./pages/admin/Estimates";
+import EstimateDetail from "./pages/admin/EstimateDetail";
 import BusinessProfile from "./pages/admin/BusinessProfile";
 import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
@@ -51,6 +53,8 @@ const App = () => (
               <Route path="invoices" element={<Invoices />} />
               <Route path="invoices/:id" element={<InvoiceDetail />} />
               <Route path="recurring" element={<RecurringInvoices />} />
+              <Route path="estimates" element={<Estimates />} />
+              <Route path="estimates/:id" element={<EstimateDetail />} />
               <Route path="expenses" element={<Expenses />} />
               <Route path="reports" element={<Reports />} />
               <Route path="profile" element={<BusinessProfile />} />
