@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import loginBg from "@/assets/login-bg.png";
 import { useAuth } from "@/hooks/useAuth";
@@ -18,8 +18,12 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { user, loading: authLoading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && user) navigate("/admin", { replace: true });
+  }, [user, authLoading, navigate]);
   const { lang, toggleLang } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
