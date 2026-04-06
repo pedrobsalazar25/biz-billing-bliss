@@ -74,33 +74,51 @@ export default function AdminLayout() {
       <div className="flex flex-col flex-1">
         <header className="md:hidden flex items-center justify-between border-b border-border bg-card px-4 py-3">
           <h1 className="text-lg font-bold">{t("admin", "admin", lang)}</h1>
-          <nav className="flex items-center gap-1">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  cn(
-                    "p-2 rounded-md",
-                    isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground"
-                  )
-                }
-              >
-                <item.icon className="h-4 w-4" />
-              </NavLink>
-            ))}
-            <button onClick={toggleTheme} className="p-2 text-muted-foreground">
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
-            <button onClick={toggleLang} className="p-2 text-muted-foreground">
-              <Globe className="h-4 w-4" />
-            </button>
-            <button onClick={handleSignOut} className="p-2 text-muted-foreground">
-              <LogOut className="h-4 w-4" />
-            </button>
-          </nav>
+          <button onClick={() => setMobileOpen(true)} className="p-2 text-muted-foreground">
+            <Menu className="h-5 w-5" />
+          </button>
         </header>
+
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetContent side="left" className="w-64 p-0">
+            <SheetHeader className="p-4 border-b border-border">
+              <SheetTitle>{t("admin", "admin", lang)}</SheetTitle>
+            </SheetHeader>
+            <nav className="flex-1 space-y-1 p-3">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.end}
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )
+                  }
+                >
+                  <item.icon className="h-4 w-4" />
+                  {t("admin", item.labelKey, lang)}
+                </NavLink>
+              ))}
+            </nav>
+            <div className="border-t border-border p-3 space-y-1">
+              <Button variant="ghost" size="sm" onClick={toggleTheme} className="w-full justify-start gap-2">
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                {theme === "dark" ? (lang === "es" ? "Modo Claro" : "Light Mode") : (lang === "es" ? "Modo Oscuro" : "Dark Mode")}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={toggleLang} className="w-full justify-start gap-2">
+                <Globe className="h-4 w-4" /> {lang === "es" ? "English" : "Español"}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => { setMobileOpen(false); handleSignOut(); }} className="w-full justify-start gap-2">
+                <LogOut className="h-4 w-4" /> {t("admin", "signOut", lang)}
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
 
         <main className="flex-1 p-4 md:p-6 overflow-auto">
           <Outlet />
