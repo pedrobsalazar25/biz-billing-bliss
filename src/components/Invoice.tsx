@@ -353,8 +353,65 @@ const Invoice = ({ data }: InvoiceProps) => {
         </div>
 
         {/* Items Table */}
-        <div className="px-6 py-8 md:px-10">
-          <div className="overflow-x-auto">
+        <div className="px-4 py-6 md:px-10 md:py-8">
+          {/* Mobile: card layout */}
+          <div className="space-y-3 md:hidden">
+            {invoiceData.items.map((item, index) => {
+              const displayDesc = getDisplayDescription(item, index);
+              const { name, detail } = parseDescription(displayDesc);
+              const isExpanded = expandedItems.has(index);
+
+              return (
+                <div
+                  key={index}
+                  className={`border border-invoice-dark/10 rounded-lg p-3 ${item.waived ? "opacity-60" : ""}`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1 flex-wrap">
+                        <span className="text-sm font-medium text-foreground">{name}</span>
+                        {detail && (
+                          <button
+                            onClick={() => toggleExpanded(index)}
+                            className="no-print p-0.5 rounded hover:bg-muted transition-colors"
+                          >
+                            <ChevronDown
+                              className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                            />
+                          </button>
+                        )}
+                        {item.waived && (
+                          <span className="text-xs bg-invoice-coral/20 text-invoice-coral px-1.5 py-0.5 rounded-full">
+                            {texts.included}
+                          </span>
+                        )}
+                      </div>
+                      {detail && isExpanded && (
+                        <p className="mt-1 text-xs text-muted-foreground">{detail}</p>
+                      )}
+                    </div>
+                    <div className="text-right shrink-0">
+                      {item.waived ? (
+                        <span className="text-sm line-through text-muted-foreground">
+                          {currencySymbol}{(item.unitPrice * item.quantity).toFixed(2)}
+                        </span>
+                      ) : (
+                        <span className="text-sm font-medium text-foreground">
+                          {currencySymbol}{item.amount.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {item.quantity} × {currencySymbol}{item.unitPrice.toFixed(2)}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop: table layout */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b-2 border-invoice-dark/10">
@@ -381,9 +438,7 @@ const Invoice = ({ data }: InvoiceProps) => {
                   return (
                     <tr
                       key={index}
-                      className={`border-b border-invoice-dark/5 ${
-                        item.waived ? "opacity-60" : ""
-                      }`}
+                      className={`border-b border-invoice-dark/5 ${item.waived ? "opacity-60" : ""}`}
                     >
                       <td className="py-4 text-sm font-medium text-foreground">
                         <div className="flex items-center gap-1">
@@ -394,9 +449,7 @@ const Invoice = ({ data }: InvoiceProps) => {
                               className="no-print ml-1 p-0.5 rounded hover:bg-muted transition-colors"
                             >
                               <ChevronDown
-                                className={`h-4 w-4 text-muted-foreground transition-transform ${
-                                  isExpanded ? "rotate-180" : ""
-                                }`}
+                                className={`h-4 w-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
                               />
                             </button>
                           )}
