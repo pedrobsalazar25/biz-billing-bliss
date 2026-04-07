@@ -299,7 +299,7 @@ const Invoice = ({ data }: InvoiceProps) => {
         <div className="invoice-header-bg px-4 py-6 md:px-10 md:py-10 relative">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-4xl md:text-5xl font-display text-primary-foreground mb-2">
+              <h1 className="text-3xl md:text-5xl font-display text-primary-foreground mb-2">
                 {texts.title}
               </h1>
               <p className="text-primary-foreground/70 text-sm max-w-xs">
