@@ -25,6 +25,7 @@ import {
 import { toast } from "sonner";
 import { Plus, Trash2, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ClientCombobox from "@/components/ClientCombobox";
 import type { Database } from "@/integrations/supabase/types";
 
 type InvoiceStatus = Database["public"]["Enums"]["invoice_status"];
@@ -52,14 +53,6 @@ export default function Invoices() {
     },
   });
 
-  const { data: clients = [] } = useQuery({
-    queryKey: ["clients"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("clients").select("id, name").order("name");
-      if (error) throw error;
-      return data;
-    },
-  });
 
   const createMutation = useMutation({
     mutationFn: async () => {
@@ -146,18 +139,7 @@ export default function Invoices() {
             >
               <div className="space-y-2">
                 <Label>{t("invoicesPage", "client", lang)}</Label>
-                <Select value={clientId} onValueChange={setClientId}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t("invoicesPage", "selectClient", lang)} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {clients.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <ClientCombobox value={clientId} onValueChange={setClientId} />
               </div>
               <div className="space-y-2">
                 <Label>{t("invoicesPage", "dueDate", lang)}</Label>
