@@ -39,14 +39,6 @@ export default function Estimates() {
     },
   });
 
-  const { data: clients = [] } = useQuery({
-    queryKey: ["clients"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("clients").select("id, name").order("name");
-      if (error) throw error;
-      return data;
-    },
-  });
 
   const createMutation = useMutation({
     mutationFn: async () => {
