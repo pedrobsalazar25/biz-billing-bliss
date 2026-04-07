@@ -11,12 +11,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
 import { toast } from "sonner";
 import { Plus, Trash2, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ClientCombobox from "@/components/ClientCombobox";
 
 export default function Estimates() {
   const { user } = useAuth();
@@ -119,12 +117,7 @@ export default function Estimates() {
             <form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(); }} className="space-y-4">
               <div className="space-y-2">
                 <Label>{t("invoicesPage", "client", lang)}</Label>
-                <Select value={clientId} onValueChange={setClientId}>
-                  <SelectTrigger><SelectValue placeholder={t("invoicesPage", "selectClient", lang)} /></SelectTrigger>
-                  <SelectContent>
-                    {clients.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-                  </SelectContent>
-                </Select>
+                <ClientCombobox value={clientId} onValueChange={setClientId} />
               </div>
               <div className="space-y-2">
                 <Label>{lang === "es" ? "Válida Hasta" : "Valid Until"}</Label>
