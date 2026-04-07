@@ -510,7 +510,7 @@ const Invoice = ({ data }: InvoiceProps) => {
         </div>
 
         {/* Footer */}
-        <div className="invoice-gradient px-6 py-6 md:px-10 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="invoice-gradient px-4 py-5 md:px-10 md:py-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-center md:text-left">
             <p className="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-1">
               {texts.from}
