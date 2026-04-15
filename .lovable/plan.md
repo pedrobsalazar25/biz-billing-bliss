@@ -1,20 +1,40 @@
 
 
-## Plan: Fix Google Sign-In Redirect to Dashboard
+## Deploying to Vercel
 
-### Problem
-After Google sign-in, `redirect_uri` is set to `window.location.origin` (the root `/`), which shows the onboarding slideshow. The app never checks if a user is already authenticated on `/` to redirect them to the dashboard.
+Your project is a standard Vite + React SPA, which Vercel supports out of the box. Here's what's needed:
 
-### Solution
-Two changes needed:
+### 1. Add SPA rewrite config (`vercel.json`)
+Since you use React Router with client-side routing, you need a `vercel.json` to rewrite all routes to `index.html` — otherwise refreshing on `/admin/invoices` or `/i/some-slug` will 404.
 
-1. **Update `src/pages/Index.tsx`** — Add an auth check at the top. If the user is already signed in, redirect them to `/admin` immediately instead of showing the onboarding slides.
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
 
-2. **Update `src/pages/Login.tsx`** — Same auth check: if the user is already logged in when landing on `/login`, redirect to `/admin`.
+### 2. Set environment variables in Vercel
+In your Vercel project settings → Environment Variables, add:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `VITE_SUPABASE_PROJECT_ID`
 
-This way, after Google OAuth completes and redirects to `/`, the app detects the authenticated session and sends the user straight to the dashboard.
+Use the same values currently in your `.env` file. These are public/publishable keys so it's safe.
 
-### Files to modify
-- `src/pages/Index.tsx` — Add `useAuth()` hook, redirect to `/admin` if `user` exists
-- `src/pages/Login.tsx` — Add `useAuth()` hook, redirect to `/admin` if `user` exists
+### 3. Update Google OAuth redirect URI
+Your Google sign-in currently uses `window.location.origin` as the redirect URI. Once deployed to Vercel (e.g. `your-app.vercel.app` or a custom domain), you'll need to make sure that domain is allowed in the Cloud authentication settings. Go to **Cloud → Users → Auth Settings** and add the Vercel domain as an allowed redirect URL.
+
+### 4. No build changes needed
+Vercel auto-detects Vite projects. The build command (`vite build`) and output directory (`dist`) work by default.
+
+### Summary of changes
+| What | Action |
+|------|--------|
+| `vercel.json` | Create with SPA rewrites |
+| Vercel env vars | Add 3 `VITE_SUPABASE_*` variables |
+| Auth redirect | Add Vercel domain to allowed redirects |
+
+No code changes are needed — only the `vercel.json` file and Vercel dashboard configuration.
 
