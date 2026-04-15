@@ -353,6 +353,7 @@ export type Database = {
           due_date: string | null
           id: string
           invoice_number: string
+          is_shared: boolean
           issue_date: string
           notes: string | null
           paid_at: string | null
@@ -375,6 +376,7 @@ export type Database = {
           due_date?: string | null
           id?: string
           invoice_number: string
+          is_shared?: boolean
           issue_date?: string
           notes?: string | null
           paid_at?: string | null
@@ -397,6 +399,7 @@ export type Database = {
           due_date?: string | null
           id?: string
           invoice_number?: string
+          is_shared?: boolean
           issue_date?: string
           notes?: string | null
           paid_at?: string | null
