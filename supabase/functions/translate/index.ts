@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,8 +12,39 @@ serve(async (req) => {
   }
 
   try {
+    // Auth guard
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data, error: authError } = await supabase.auth.getClaims(token);
+    if (authError || !data?.claims) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { texts, targetLanguage } = await req.json();
     
+    if (!texts || !targetLanguage || !["en", "es"].includes(targetLanguage)) {
+      return new Response(JSON.stringify({ error: "Invalid input" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
@@ -55,13 +87,11 @@ serve(async (req) => {
       throw new Error(`AI gateway error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const translatedContent = data.choices?.[0]?.message?.content;
+    const aiData = await response.json();
+    const translatedContent = aiData.choices?.[0]?.message?.content;
     
-    // Parse the translated JSON
     let translatedTexts;
     try {
-      // Remove any markdown code blocks if present
       const cleanContent = translatedContent.replace(/```json\n?|\n?```/g, '').trim();
       translatedTexts = JSON.parse(cleanContent);
     } catch (parseError) {
@@ -75,7 +105,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Translation error:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({ error: "An error occurred" }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
