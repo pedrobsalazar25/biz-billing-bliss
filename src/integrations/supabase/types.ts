@@ -18,15 +18,19 @@ export type Database = {
         Row: {
           address_line1: string | null
           address_line2: string | null
+          bizum: string | null
           business_name: string
           city: string | null
           country: string | null
           created_at: string
           email: string | null
+          footer_note: string | null
+          iban: string | null
           id: string
           invoice_prefix: string
           logo_url: string | null
           next_invoice_number: number
+          payment_terms: string | null
           phone: string | null
           postal_code: string | null
           state: string | null
@@ -37,15 +41,19 @@ export type Database = {
         Insert: {
           address_line1?: string | null
           address_line2?: string | null
+          bizum?: string | null
           business_name: string
           city?: string | null
           country?: string | null
           created_at?: string
           email?: string | null
+          footer_note?: string | null
+          iban?: string | null
           id?: string
           invoice_prefix?: string
           logo_url?: string | null
           next_invoice_number?: number
+          payment_terms?: string | null
           phone?: string | null
           postal_code?: string | null
           state?: string | null
@@ -56,15 +64,19 @@ export type Database = {
         Update: {
           address_line1?: string | null
           address_line2?: string | null
+          bizum?: string | null
           business_name?: string
           city?: string | null
           country?: string | null
           created_at?: string
           email?: string | null
+          footer_note?: string | null
+          iban?: string | null
           id?: string
           invoice_prefix?: string
           logo_url?: string | null
           next_invoice_number?: number
+          payment_terms?: string | null
           phone?: string | null
           postal_code?: string | null
           state?: string | null
