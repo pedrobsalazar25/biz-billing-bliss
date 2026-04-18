@@ -30,9 +30,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Plus, Pencil, Trash2, Copy, Send, MessageCircle, Download } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
+import { DetailHeader } from "@/components/DetailHeader";
+import { ShareActions } from "@/components/ShareActions";
 
 interface LineItemForm {
   description: string;
@@ -202,67 +204,19 @@ export default function InvoiceDetail() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/admin/invoices")}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div className="min-w-0">
-            <h2 className="text-xl md:text-2xl font-bold truncate">{invoice.invoice_number}</h2>
-            <p className="text-sm text-muted-foreground truncate">
-              {(invoice.clients as any)?.name ?? t("invoiceDetail", "noClient", lang)} · {invoice.status}
-            </p>
-          </div>
-        </div>
-        {invoice.public_share_slug && (() => {
-          const publicUrl = `${window.location.origin}/i/${invoice.public_share_slug}`;
-          const clientName = (invoice.clients as any)?.name ?? "Client";
-          const emailSubject = encodeURIComponent(`Invoice ${invoice.invoice_number}`);
-          const emailBody = encodeURIComponent(`Hi ${clientName},\n\nPlease find your invoice here:\n${publicUrl}\n\nBest regards,\nPedro Barrios`);
-          const waMsg = encodeURIComponent(`Hi ${clientName}, here is your invoice ${invoice.invoice_number}:\n${publicUrl}`);
-          return (
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full min-w-0">
-              <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate w-full sm:max-w-[300px] block min-w-0">
-                {publicUrl}
-              </code>
-              <div className="grid grid-cols-4 sm:flex gap-1.5 w-full sm:w-auto">
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="h-8 min-w-0 px-2"
-                  onClick={() => window.open(publicUrl, '_blank')}
-                >
-                  <Download className="h-3.5 w-3.5 sm:mr-1" />
-                  <span className="hidden sm:inline">{t("invoiceDetail", "downloadPdf", lang)}</span>
-                  <span className="sm:hidden text-xs ml-1 truncate">PDF</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-8 min-w-0 px-2"
-                  onClick={() => {
-                    navigator.clipboard.writeText(publicUrl);
-                    toast.success("Public link copied!");
-                  }}
-                >
-                  <Copy className="h-3.5 w-3.5" />
-                  <span className="sm:hidden text-xs ml-1">Copy</span>
-                </Button>
-                <Button variant="outline" size="sm" className="h-8 min-w-0 px-2" asChild>
-                  <a href={`mailto:?subject=${emailSubject}&body=${emailBody}`} target="_blank" rel="noopener noreferrer">
-                    <Send className="h-3.5 w-3.5 sm:mr-1" />
-                    <span className="text-xs ml-1 sm:ml-0">Email</span>
-                  </a>
-                </Button>
-                <Button variant="outline" size="sm" className="h-8 min-w-0 px-2 text-green-600 border-green-600 hover:bg-green-50" asChild>
-                  <a href={`https://wa.me/?text=${waMsg}`} target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="h-3.5 w-3.5 sm:mr-1" />
-                    <span className="text-xs ml-1 sm:ml-0 truncate">WA</span>
-                  </a>
-                </Button>
-              </div>
-            </div>
-          );
-        })()}
+        <DetailHeader
+          backTo="/admin/invoices"
+          title={invoice.invoice_number}
+          subtitle={`${(invoice.clients as any)?.name ?? t("invoiceDetail", "noClient", lang)} · ${invoice.status}`}
+        />
+        {invoice.public_share_slug && (
+          <ShareActions
+            publicUrl={`${window.location.origin}/i/${invoice.public_share_slug}`}
+            clientName={(invoice.clients as any)?.name ?? "Client"}
+            documentLabel={`Invoice ${invoice.invoice_number}`}
+            pdfButtonLabel={t("invoiceDetail", "downloadPdf", lang)}
+          />
+        )}
       </div>
 
       <Card>

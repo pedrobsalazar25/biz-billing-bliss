@@ -17,9 +17,10 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, Pencil, Trash2, FileText } from "lucide-react";
+import { Plus, Pencil, Trash2, FileText } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
+import { DetailHeader } from "@/components/DetailHeader";
 
 interface LineItemForm {
   description: string;
@@ -212,33 +213,29 @@ export default function EstimateDetail() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3">
-        <div className="flex items-start gap-2 sm:items-center sm:gap-3">
-          <Button variant="ghost" size="icon" className="shrink-0" onClick={() => navigate("/admin/estimates")}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div className="min-w-0 flex-1">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold truncate">{(estimate as any).estimate_number}</h2>
-            <p className="text-xs sm:text-sm text-muted-foreground truncate">
-              {(estimate as any).clients?.name ?? (lang === "es" ? "Sin cliente" : "No client")}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            {!isConverted && (
-              <Select value={(estimate as any).status} onValueChange={(v) => updateStatusMutation.mutate(v)}>
-                <SelectTrigger className="w-[110px] sm:w-32 h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="draft">{lang === "es" ? "Borrador" : "Draft"}</SelectItem>
-                  <SelectItem value="sent">{lang === "es" ? "Enviada" : "Sent"}</SelectItem>
-                  <SelectItem value="approved">{lang === "es" ? "Aprobada" : "Approved"}</SelectItem>
-                  <SelectItem value="rejected">{lang === "es" ? "Rechazada" : "Rejected"}</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
-            {isConverted && <Badge variant="outline" className="text-xs">{lang === "es" ? "Convertida" : "Converted"}</Badge>}
-          </div>
-        </div>
+        <DetailHeader
+          backTo="/admin/estimates"
+          title={(estimate as any).estimate_number}
+          subtitle={(estimate as any).clients?.name ?? (lang === "es" ? "Sin cliente" : "No client")}
+          rightSlot={
+            <>
+              {!isConverted && (
+                <Select value={(estimate as any).status} onValueChange={(v) => updateStatusMutation.mutate(v)}>
+                  <SelectTrigger className="w-[110px] sm:w-32 h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">{lang === "es" ? "Borrador" : "Draft"}</SelectItem>
+                    <SelectItem value="sent">{lang === "es" ? "Enviada" : "Sent"}</SelectItem>
+                    <SelectItem value="approved">{lang === "es" ? "Aprobada" : "Approved"}</SelectItem>
+                    <SelectItem value="rejected">{lang === "es" ? "Rechazada" : "Rejected"}</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+              {isConverted && <Badge variant="outline" className="text-xs">{lang === "es" ? "Convertida" : "Converted"}</Badge>}
+            </>
+          }
+        />
 
         {!isConverted && (estimate as any).status === "approved" && (
           <Button onClick={() => convertToInvoiceMutation.mutate()} disabled={convertToInvoiceMutation.isPending} size="sm" className="w-full sm:w-fit">
