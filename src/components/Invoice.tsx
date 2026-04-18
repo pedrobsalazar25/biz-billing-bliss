@@ -321,7 +321,6 @@ const Invoice = ({ data }: InvoiceProps) => {
                   alt={`${invoiceData.from.name || "Business"} logo`}
                   className="w-full h-full object-contain p-1"
                 />
-                )}
               </div>
             </div>
           </div>
