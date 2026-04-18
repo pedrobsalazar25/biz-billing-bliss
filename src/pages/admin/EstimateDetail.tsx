@@ -147,7 +147,9 @@ export default function EstimateDetail() {
 
   const updateStatusMutation = useMutation({
     mutationFn: async (status: string) => {
-      const { error } = await supabase.from("estimates").update({ status } as any).eq("id", id!);
+      const patch: any = { status };
+      if (status === "sent" || status === "approved") patch.is_shared = true;
+      const { error } = await supabase.from("estimates").update(patch).eq("id", id!);
       if (error) throw error;
     },
     onSuccess: () => {
