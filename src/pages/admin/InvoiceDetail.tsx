@@ -61,7 +61,7 @@ export default function InvoiceDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("invoices")
-        .select("*, clients(name)")
+        .select("*, clients(name, phone)")
         .eq("id", id!)
         .single();
       if (error) throw error;
