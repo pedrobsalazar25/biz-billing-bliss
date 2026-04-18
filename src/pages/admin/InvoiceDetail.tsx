@@ -84,6 +84,19 @@ export default function InvoiceDetail() {
     enabled: !!id,
   });
 
+  const { data: businessProfile } = useQuery({
+    queryKey: ["businessProfile"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("business_profiles")
+        .select("business_name, email, phone, address_line1, address_line2, city, state, postal_code, country")
+        .eq("user_id", user!.id)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!user,
+  });
+
   const { data: products = [] } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
@@ -215,6 +228,24 @@ export default function InvoiceDetail() {
             clientName={(invoice.clients as any)?.name ?? "Client"}
             documentLabel={`Invoice ${invoice.invoice_number}`}
             pdfButtonLabel={t("invoiceDetail", "downloadPdf", lang)}
+            totalFormatted={`${currencySymbol}${Number(invoice.total).toFixed(2)}`}
+            business={
+              businessProfile
+                ? {
+                    name: businessProfile.business_name,
+                    email: businessProfile.email ?? undefined,
+                    phone: businessProfile.phone ?? undefined,
+                    address: [
+                      businessProfile.address_line1,
+                      businessProfile.address_line2,
+                      [businessProfile.postal_code, businessProfile.city].filter(Boolean).join(" "),
+                      [businessProfile.state, businessProfile.country].filter(Boolean).join(", "),
+                    ]
+                      .filter((l) => l && String(l).trim().length > 0)
+                      .join("\n"),
+                  }
+                : undefined
+            }
           />
         )}
       </div>
