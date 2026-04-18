@@ -116,6 +116,8 @@ export function ShareActions({
   const emailSubject = encodeURIComponent(documentLabel);
   const emailBody = encodeURIComponent(buildEmailBody());
   const waMsg = encodeURIComponent(buildWaMessage());
+  const waPhone = (clientPhone || "").replace(/[^\d]/g, "");
+  const waUrl = waPhone ? `https://wa.me/${waPhone}?text=${waMsg}` : `https://wa.me/?text=${waMsg}`;
 
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full min-w-0">
