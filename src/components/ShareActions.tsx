@@ -2,12 +2,21 @@ import { Button } from "@/components/ui/button";
 import { Copy, Download, Send, MessageCircle, Eye } from "lucide-react";
 import { toast } from "sonner";
 
+interface BusinessContact {
+  name?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+}
+
 interface ShareActionsProps {
   publicUrl: string;
   clientName: string;
   documentLabel: string; // e.g. "Invoice INV-001"
   pdfButtonLabel: string;
   fromName?: string;
+  totalFormatted?: string; // e.g. "€660.00"
+  business?: BusinessContact;
 }
 
 export function ShareActions({
@@ -16,13 +25,40 @@ export function ShareActions({
   documentLabel,
   pdfButtonLabel,
   fromName = "Pedro Barrios",
+  totalFormatted,
+  business,
 }: ShareActionsProps) {
+  const senderName = business?.name || fromName;
+
+  const buildEmailBody = () => {
+    const lines: string[] = [];
+    lines.push(`Hi ${clientName},`);
+    lines.push("");
+    lines.push(
+      `Hope you're doing well! Please find attached your ${documentLabel} from ${senderName}${
+        totalFormatted ? ` for a total of ${totalFormatted}` : ""
+      }.`
+    );
+    lines.push("");
+    lines.push("You can view and download it here:");
+    lines.push(publicUrl);
+    lines.push("");
+    lines.push("Thank you for your business!");
+    lines.push("");
+    lines.push("---");
+    lines.push(senderName);
+    if (business?.email) lines.push(`Email: ${business.email}`);
+    if (business?.phone) lines.push(`Phone: ${business.phone}`);
+    if (business?.address) lines.push(business.address.replace(/\n/g, ", "));
+    return lines.join("\n");
+  };
+
   const emailSubject = encodeURIComponent(documentLabel);
-  const emailBody = encodeURIComponent(
-    `Hi ${clientName},\n\nPlease find your document here:\n${publicUrl}\n\nBest regards,\n${fromName}`
-  );
+  const emailBody = encodeURIComponent(buildEmailBody());
   const waMsg = encodeURIComponent(
-    `Hi ${clientName}, here is your ${documentLabel}:\n${publicUrl}`
+    `Hi ${clientName}, here is your ${documentLabel}${
+      totalFormatted ? ` (${totalFormatted})` : ""
+    }:\n${publicUrl}`
   );
 
   return (
