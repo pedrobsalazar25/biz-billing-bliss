@@ -66,6 +66,16 @@ const PublicInvoice = () => {
           bizum: (business as any)?.bizum || undefined,
           paymentTerms: (business as any)?.payment_terms || undefined,
           footerNote: (business as any)?.footer_note || undefined,
+          address: business
+            ? [
+                business.address_line1,
+                business.address_line2,
+                [business.postal_code, business.city].filter(Boolean).join(" "),
+                [business.state, business.country].filter(Boolean).join(", "),
+              ]
+                .filter((l) => l && String(l).trim().length > 0)
+                .join("\n") || undefined
+            : undefined,
         },
         to: {
           name: client?.name || "",
