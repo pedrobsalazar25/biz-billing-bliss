@@ -254,6 +254,35 @@ export default function EstimateDetail() {
           }
         />
 
+        {(estimate as any).public_share_slug && ((estimate as any).is_shared || ["sent","approved","converted"].includes((estimate as any).status)) && (
+          <ShareActions
+            publicUrl={`${window.location.origin}/e/${(estimate as any).public_share_slug}`}
+            clientName={(estimate as any).clients?.name ?? "Client"}
+            clientPhone={(estimate as any).clients?.phone ?? undefined}
+            documentLabel={`${lang === "es" ? "Cotización" : "Estimate"} ${(estimate as any).estimate_number}`}
+            pdfButtonLabel={t("invoiceDetail", "downloadPdf", lang)}
+            lang={lang}
+            totalFormatted={`${currencySymbol}${Number((estimate as any).total).toFixed(2)}`}
+            business={
+              businessProfile
+                ? {
+                    name: businessProfile.business_name,
+                    email: businessProfile.email ?? undefined,
+                    phone: businessProfile.phone ?? undefined,
+                    address: [
+                      businessProfile.address_line1,
+                      businessProfile.address_line2,
+                      [businessProfile.postal_code, businessProfile.city].filter(Boolean).join(" "),
+                      [businessProfile.state, businessProfile.country].filter(Boolean).join(", "),
+                    ]
+                      .filter((l) => l && String(l).trim().length > 0)
+                      .join("\n"),
+                  }
+                : undefined
+            }
+          />
+        )}
+
         {!isConverted && (estimate as any).status === "approved" && (
           <Button onClick={() => convertToInvoiceMutation.mutate()} disabled={convertToInvoiceMutation.isPending} size="sm" className="w-full sm:w-fit">
             <FileText className="h-4 w-4 mr-1" />
