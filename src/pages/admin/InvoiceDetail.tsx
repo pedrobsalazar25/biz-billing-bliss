@@ -202,8 +202,8 @@ export default function InvoiceDetail() {
   const currencySymbol = invoice.currency === "EUR" ? "€" : "$";
 
   return (
-    <div className="space-y-4 min-w-0 w-full overflow-x-hidden">
-      <div className="flex flex-col gap-3 min-w-0 w-full">
+    <div className="space-y-4">
+      <div className="flex flex-col gap-3">
         <DetailHeader
           backTo="/admin/invoices"
           title={invoice.invoice_number}
