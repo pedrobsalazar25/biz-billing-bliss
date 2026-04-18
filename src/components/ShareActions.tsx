@@ -18,6 +18,7 @@ interface ShareActionsProps {
   totalFormatted?: string; // e.g. "€660.00"
   business?: BusinessContact;
   lang?: "es" | "en";
+  clientPhone?: string;
 }
 
 export function ShareActions({
