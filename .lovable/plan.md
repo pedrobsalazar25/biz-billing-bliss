@@ -1,11 +1,13 @@
 
-The user wants me to test Google sign-in on the Vercel deployment. This requires browser automation (navigate + interact with Google OAuth), which is available in default mode.
+Add an Eye icon button to `ShareActions.tsx` that opens the public URL in a new tab.
 
-Plan:
-1. Navigate to `https://invoice-two-delta.vercel.app/login`
-2. Click the "Continue with Google" button
-3. Observe the redirect — verify it goes to Google's OAuth consent screen (accounts.google.com) and not a 404
-4. Report back what happened. I will NOT complete the actual Google login (requires user credentials) — I'll just confirm the redirect chain works correctly through Lovable Cloud's callback URL and lands on Google's auth page
+**Change** (`src/components/ShareActions.tsx`):
+1. Import `Eye` from lucide-react.
+2. Switch mobile button group from `grid-cols-3` back to `grid-cols-4`.
+3. Add new "View" button as the first item in the button group (visible on both mobile and desktop), styled `variant="outline"`, `h-8 min-w-0 px-2`, with `Eye` icon + "View" label on mobile.
+4. Keep existing PDF (desktop only), Copy, Email, WhatsApp buttons unchanged.
 
-If the redirect succeeds → OAuth is correctly configured for Vercel.
-If a 404 or error appears → I'll capture the failing URL and diagnose (likely a missing redirect URL in either Google Cloud Console or Lovable Cloud Auth Settings).
+Result on mobile: 4 even columns — View, Copy, Email, WA.
+Result on desktop: PDF, View, Copy, Email, WhatsApp inline.
+
+No changes needed in `InvoiceDetail.tsx` or `EstimateDetail.tsx` — they consume `ShareActions` and pick it up automatically.
