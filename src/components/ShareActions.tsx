@@ -47,7 +47,7 @@ export function ShareActions({
       );
       lines.push("");
       lines.push("Puedes verla y descargarla aquí:");
-      lines.push(publicUrl);
+      lines.push(`<${publicUrl}>`);
       lines.push("");
       lines.push("¡Gracias por tu confianza!");
     } else {
@@ -60,7 +60,7 @@ export function ShareActions({
       );
       lines.push("");
       lines.push("You can view and download it here:");
-      lines.push(publicUrl);
+      lines.push(`<${publicUrl}>`);
       lines.push("");
       lines.push("Thank you for your business!");
     }
