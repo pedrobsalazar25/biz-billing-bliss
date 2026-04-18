@@ -1,46 +1,46 @@
 
-You're clarifying that the "From" block currently just shows who's sending the invoice (name, address, contact). You want ideas for what to add **below it** in the footer area to make it more complete/professional.
+The WhatsApp link in `src/components/ShareActions.tsx` is built like this:
 
-## Recommended footer additions for a Spanish freelancer
-
-Grouped from most to least essential:
-
-**1. Legal / fiscal (essential in Spain)**
-- NIF/CIF/NIE number — legally required on Spanish invoices
-- IRPF retention line if applicable (e.g. "Retención IRPF -15%")
-- IVA exemption note if applicable
-
-**2. Payment instructions (highest practical value)**
-- IBAN for bank transfer
-- Bizum number
-- Accepted methods (PayPal, Stripe link, Wise)
-- Payment terms ("Pago a 15 días" / "Net 30")
-
-**3. Trust & brand**
-- Thank-you message ("Gracias por tu confianza")
-- Website + social handles
-- Tagline
-
-**4. Optional polish**
-- QR code linking to public invoice or payment
-- Late payment policy
-- Signature image
-
-## My pick for your invoice (3 compact lines)
-
-```
-NIF: 12345678X
-Pago: IBAN ES00 0000 0000 0000 0000 · Bizum 600 000 000 · Pago a 15 días
-Gracias por tu confianza
+**Structure:**
+```text
+https://wa.me/{phone}?text={url-encoded-message}
 ```
 
-Covers legal requirement, makes payment frictionless, ends warm.
+- `{phone}` — client's phone, sanitized to digits only (country code + number, no `+`, spaces, or dashes). If no client phone is on file, it falls back to `https://wa.me/?text=...` (WhatsApp asks the user to pick a contact).
+- `{text}` — the URL-encoded message body.
 
-## If you approve, implementation plan
+**Code that builds it (`ShareActions.tsx`):**
+```ts
+const waMsg = encodeURIComponent(buildWaMessage());
+const waPhone = (clientPhone || "").replace(/[^\d]/g, "");
+const waUrl = waPhone
+  ? `https://wa.me/${waPhone}?text=${waMsg}`
+  : `https://wa.me/?text=${waMsg}`;
+```
 
-1. **DB migration** — add to `business_profiles`: `nif`, `iban`, `bizum`, `payment_terms`, `footer_note`.
-2. **`BusinessProfile.tsx`** — add a new "Payment & Footer" card with these inputs.
-3. **`Invoice.tsx`** — extend `InvoiceData.from` shape and render a footer block under the From section showing only the fields that have values.
-4. **`PublicInvoice.tsx`** + **`InvoiceDetail.tsx`** + **`EstimateDetail.tsx`** — pass new fields from `business_profiles` into `InvoiceData.from`.
+**Decoded message body (EN example):**
+```text
+Hi {clientName} 👋
 
-Tell me which fields you want included and I'll build it.
+Hope you're doing well! Here is your {documentLabel} from {senderName} for a total of *{totalFormatted}*.
+
+View & download:
+{publicUrl}
+
+Thank you for your business!
+
+---
+{senderName}
+✉️ {business.email}
+📞 {business.phone}
+📍 {business.address}
+```
+
+**Concrete example** (client Peter, +34 604065849, invoice INV-00004, total €660.00):
+```text
+https://wa.me/34604065849?text=Hi%20Peter%20%F0%9F%91%8B%0A%0AHope%20you're%20doing%20well!%20Here%20is%20your%20Invoice%20INV-00004%20from%20Pedro%20Barrios%20for%20a%20total%20of%20*%E2%82%AC660.00*.%0A%0AView%20%26%20download%3A%0Ahttps%3A%2F%2Finvoice-pedro.lovable.app%2Fi%2Fpeter-04%0A%0AThank%20you%20for%20your%20business!%0A%0A---%0APedro%20Barrios%0A%E2%9C%89%EF%B8%8F%20hello%40example.com%0A%F0%9F%93%9E%20%2B34%20...
+```
+
+When language is `es`, the body switches to the Spanish equivalent (Hola / Aquí tienes tu / Ver y descargar / ¡Gracias por tu confianza!).
+
+**Note:** This is the `wa.me` "click to chat" format — it works on both mobile WhatsApp and WhatsApp Web, and pre-fills the message in the chat with the given phone number. No plan changes needed — this is purely informational.
