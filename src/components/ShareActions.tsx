@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Copy, Download, Send, MessageCircle } from "lucide-react";
+import { Copy, Download, Send, MessageCircle, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 interface ShareActionsProps {
@@ -30,7 +30,7 @@ export function ShareActions({
       <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate w-full sm:max-w-[300px] block min-w-0">
         {publicUrl}
       </code>
-      <div className="grid grid-cols-3 sm:flex gap-1.5 w-full sm:w-auto">
+      <div className="grid grid-cols-4 sm:flex gap-1.5 w-full sm:w-auto">
         <Button
           variant="default"
           size="sm"
@@ -44,12 +44,21 @@ export function ShareActions({
           variant="outline"
           size="sm"
           className="h-8 min-w-0 px-2"
+          onClick={() => window.open(publicUrl, "_blank")}
+        >
+          <Eye className="h-3.5 w-3.5 sm:mr-1" />
+          <span className="text-xs ml-1 sm:ml-0">View</span>
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 min-w-0 px-2"
           onClick={() => {
             navigator.clipboard.writeText(publicUrl);
             toast.success("Public link copied!");
           }}
         >
-          <Copy className="h-3.5 w-3.5" />
+          <Copy className="h-3.5 w-3.5 sm:mr-0" />
           <span className="sm:hidden text-xs ml-1">Copy</span>
         </Button>
         <Button variant="outline" size="sm" className="h-8 min-w-0 px-2" asChild>
