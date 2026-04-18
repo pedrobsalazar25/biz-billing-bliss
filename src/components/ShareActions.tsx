@@ -172,7 +172,7 @@ export function ShareActions({
           asChild
         >
           <a
-            href={`https://wa.me/?text=${waMsg}`}
+            href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
