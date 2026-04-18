@@ -30,6 +30,7 @@ export function ShareActions({
   totalFormatted,
   business,
   lang = "en",
+  clientPhone,
 }: ShareActionsProps) {
   const senderName = business?.name || fromName;
   const isEs = lang === "es";
