@@ -22,6 +22,10 @@ interface ProfileForm {
   postal_code: string;
   country: string;
   invoice_prefix: string;
+  iban: string;
+  bizum: string;
+  payment_terms: string;
+  footer_note: string;
 }
 
 const emptyForm: ProfileForm = {
@@ -36,6 +40,10 @@ const emptyForm: ProfileForm = {
   postal_code: "",
   country: "",
   invoice_prefix: "INV-",
+  iban: "",
+  bizum: "",
+  payment_terms: "",
+  footer_note: "",
 };
 
 export default function BusinessProfile() {
@@ -74,6 +82,10 @@ export default function BusinessProfile() {
         postal_code: profile.postal_code ?? "",
         country: profile.country ?? "",
         invoice_prefix: profile.invoice_prefix ?? "INV-",
+        iban: (profile as any).iban ?? "",
+        bizum: (profile as any).bizum ?? "",
+        payment_terms: (profile as any).payment_terms ?? "",
+        footer_note: (profile as any).footer_note ?? "",
       });
       if (profile.logo_url) setLogoPreview(profile.logo_url);
     }
@@ -137,7 +149,11 @@ export default function BusinessProfile() {
         postal_code: form.postal_code || null,
         country: form.country || null,
         invoice_prefix: form.invoice_prefix || "INV-",
-      };
+        iban: form.iban || null,
+        bizum: form.bizum || null,
+        payment_terms: form.payment_terms || null,
+        footer_note: form.footer_note || null,
+      } as any;
       if (profile) {
         const { error } = await supabase.from("business_profiles").update(payload).eq("id", profile.id);
         if (error) throw error;
