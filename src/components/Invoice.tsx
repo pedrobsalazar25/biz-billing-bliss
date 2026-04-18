@@ -86,6 +86,7 @@ export interface InvoiceData {
     bizum?: string;
     paymentTerms?: string;
     footerNote?: string;
+    address?: string;
   };
   to: {
     name: string;
