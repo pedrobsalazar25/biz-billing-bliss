@@ -347,6 +347,48 @@ export default function BusinessProfile() {
           </CardContent>
         </Card>
 
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{t("profile", "paymentFooter", lang)}</CardTitle>
+            <p className="text-xs text-muted-foreground">{t("profile", "paymentFooterDesc", lang)}</p>
+          </CardHeader>
+          <CardContent className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2 sm:col-span-2">
+              <Label>{t("profile", "iban", lang)}</Label>
+              <Input
+                value={form.iban}
+                onChange={(e) => set("iban", e.target.value)}
+                placeholder="ES00 0000 0000 0000 0000 0000"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("profile", "bizum", lang)}</Label>
+              <Input
+                value={form.bizum}
+                onChange={(e) => set("bizum", e.target.value)}
+                placeholder="600 000 000"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("profile", "paymentTerms", lang)}</Label>
+              <Input
+                value={form.payment_terms}
+                onChange={(e) => set("payment_terms", e.target.value)}
+                placeholder={t("profile", "paymentTermsPlaceholder", lang)}
+              />
+            </div>
+            <div className="space-y-2 sm:col-span-2">
+              <Label>{t("profile", "footerNote", lang)}</Label>
+              <Textarea
+                value={form.footer_note}
+                onChange={(e) => set("footer_note", e.target.value)}
+                placeholder={t("profile", "footerNotePlaceholder", lang)}
+                rows={2}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
         <Button type="submit" disabled={saveMutation.isPending} className="gap-2">
           <Save className="h-4 w-4" />
           {saveMutation.isPending ? t("profile", "saving", lang) : t("profile", "saveProfile", lang)}
