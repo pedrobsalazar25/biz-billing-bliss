@@ -61,6 +61,11 @@ const PublicInvoice = () => {
           email: business?.email || "",
           phone: business?.phone || "",
           logoUrl: business?.logo_url || undefined,
+          taxId: (business as any)?.tax_id || undefined,
+          iban: (business as any)?.iban || undefined,
+          bizum: (business as any)?.bizum || undefined,
+          paymentTerms: (business as any)?.payment_terms || undefined,
+          footerNote: (business as any)?.footer_note || undefined,
         },
         to: {
           name: client?.name || "",

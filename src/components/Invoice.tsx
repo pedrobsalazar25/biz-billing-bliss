@@ -81,6 +81,11 @@ export interface InvoiceData {
     email: string;
     phone: string;
     logoUrl?: string;
+    taxId?: string;
+    iban?: string;
+    bizum?: string;
+    paymentTerms?: string;
+    footerNote?: string;
   };
   to: {
     name: string;
@@ -510,33 +515,69 @@ const Invoice = ({ data }: InvoiceProps) => {
         </div>
 
         {/* Footer */}
-        <div className="invoice-gradient px-4 py-5 md:px-10 md:py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-center md:text-left">
-            <p className="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-1">
-              {texts.from}
-            </p>
-            <p className="text-lg font-bold text-primary-foreground">
-              {invoiceData.from.name}
-            </p>
+        <div className="invoice-gradient px-4 py-5 md:px-10 md:py-6 space-y-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="text-center md:text-left">
+              <p className="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-1">
+                {texts.from}
+              </p>
+              <p className="text-lg font-bold text-primary-foreground">
+                {invoiceData.from.name}
+              </p>
+              {invoiceData.from.taxId && (
+                <p className="text-xs text-primary-foreground/80 mt-0.5">
+                  {language === "es" ? "NIF" : "Tax ID"}: {invoiceData.from.taxId}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-6 text-sm text-primary-foreground/90 w-full md:w-auto">
+              {invoiceData.from.email && (
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="truncate">{invoiceData.from.email}</span>
+                </div>
+              )}
+              {invoiceData.from.phone && (
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  {invoiceData.from.phone}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="flex flex-col md:flex-row gap-4 md:gap-6 text-sm text-primary-foreground/90">
-            {invoiceData.from.email && (
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                {invoiceData.from.email}
-              </div>
-            )}
-            {invoiceData.from.phone && (
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                {invoiceData.from.phone}
-              </div>
-            )}
-          </div>
+
+          {(invoiceData.from.iban || invoiceData.from.bizum || invoiceData.from.paymentTerms) && (
+            <div className="border-t border-primary-foreground/15 pt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-primary-foreground/85">
+              {invoiceData.from.iban && (
+                <div>
+                  <span className="font-semibold text-primary-foreground/70">IBAN:</span> {invoiceData.from.iban}
+                </div>
+              )}
+              {invoiceData.from.bizum && (
+                <div>
+                  <span className="font-semibold text-primary-foreground/70">Bizum:</span> {invoiceData.from.bizum}
+                </div>
+              )}
+              {invoiceData.from.paymentTerms && (
+                <div>
+                  <span className="font-semibold text-primary-foreground/70">
+                    {language === "es" ? "Condiciones" : "Terms"}:
+                  </span>{" "}
+                  {invoiceData.from.paymentTerms}
+                </div>
+              )}
+            </div>
+          )}
+
+          {invoiceData.from.footerNote && (
+            <div className="border-t border-primary-foreground/15 pt-3 text-center text-xs italic text-primary-foreground/80">
+              {invoiceData.from.footerNote}
+            </div>
+          )}
         </div>
       </div>
     </div>
