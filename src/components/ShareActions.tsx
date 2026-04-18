@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Copy, Download, Send, MessageCircle } from "lucide-react";
+import { Copy, Download, Send, MessageCircle, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 interface ShareActionsProps {
