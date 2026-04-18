@@ -226,8 +226,9 @@ export default function InvoiceDetail() {
           <ShareActions
             publicUrl={`${window.location.origin}/i/${invoice.public_share_slug}`}
             clientName={(invoice.clients as any)?.name ?? "Client"}
-            documentLabel={`Invoice ${invoice.invoice_number}`}
+            documentLabel={`${lang === "es" ? "Factura" : "Invoice"} ${invoice.invoice_number}`}
             pdfButtonLabel={t("invoiceDetail", "downloadPdf", lang)}
+            lang={lang}
             totalFormatted={`${currencySymbol}${Number(invoice.total).toFixed(2)}`}
             business={
               businessProfile
