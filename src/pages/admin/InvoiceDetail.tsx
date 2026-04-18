@@ -220,38 +220,43 @@ export default function InvoiceDetail() {
           const emailBody = encodeURIComponent(`Hi ${clientName},\n\nPlease find your invoice here:\n${publicUrl}\n\nBest regards,\nPedro Barrios`);
           const waMsg = encodeURIComponent(`Hi ${clientName}, here is your invoice ${invoice.invoice_number}:\n${publicUrl}`);
           return (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-              <Button
-                variant="default"
-                size="sm"
-                className="h-7 shrink-0"
-                onClick={() => window.open(publicUrl, '_blank')}
-              >
-                <Download className="h-3.5 w-3.5 mr-1" /> {t("invoiceDetail", "downloadPdf", lang)}
-              </Button>
-              <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate max-w-full sm:max-w-[300px] block">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full min-w-0">
+              <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded truncate w-full sm:max-w-[300px] block min-w-0">
                 {publicUrl}
               </code>
-              <div className="flex items-center gap-1.5">
+              <div className="grid grid-cols-4 sm:flex gap-1.5 w-full sm:w-auto">
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="h-8 min-w-0 px-2"
+                  onClick={() => window.open(publicUrl, '_blank')}
+                >
+                  <Download className="h-3.5 w-3.5 sm:mr-1" />
+                  <span className="hidden sm:inline">{t("invoiceDetail", "downloadPdf", lang)}</span>
+                  <span className="sm:hidden text-xs ml-1 truncate">PDF</span>
+                </Button>
                 <Button
                   variant="outline"
-                  size="icon"
-                  className="h-7 w-7 shrink-0"
+                  size="sm"
+                  className="h-8 min-w-0 px-2"
                   onClick={() => {
                     navigator.clipboard.writeText(publicUrl);
                     toast.success("Public link copied!");
                   }}
                 >
                   <Copy className="h-3.5 w-3.5" />
+                  <span className="sm:hidden text-xs ml-1">Copy</span>
                 </Button>
-                <Button variant="outline" size="sm" className="h-7 shrink-0" asChild>
+                <Button variant="outline" size="sm" className="h-8 min-w-0 px-2" asChild>
                   <a href={`mailto:?subject=${emailSubject}&body=${emailBody}`} target="_blank" rel="noopener noreferrer">
-                    <Send className="h-3.5 w-3.5 mr-1" /> Email
+                    <Send className="h-3.5 w-3.5 sm:mr-1" />
+                    <span className="text-xs ml-1 sm:ml-0">Email</span>
                   </a>
                 </Button>
-                <Button variant="outline" size="sm" className="h-7 shrink-0 text-green-600 border-green-600 hover:bg-green-50" asChild>
+                <Button variant="outline" size="sm" className="h-8 min-w-0 px-2 text-green-600 border-green-600 hover:bg-green-50" asChild>
                   <a href={`https://wa.me/?text=${waMsg}`} target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="h-3.5 w-3.5 mr-1" /> WhatsApp
+                    <MessageCircle className="h-3.5 w-3.5 sm:mr-1" />
+                    <span className="text-xs ml-1 sm:ml-0 truncate">WA</span>
                   </a>
                 </Button>
               </div>
