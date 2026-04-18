@@ -212,20 +212,20 @@ export default function EstimateDetail() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/admin/estimates")}>
+        <div className="flex items-start gap-2 sm:items-center sm:gap-3">
+          <Button variant="ghost" size="icon" className="shrink-0" onClick={() => navigate("/admin/estimates")}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="min-w-0 flex-1">
-            <h2 className="text-xl md:text-2xl font-bold truncate">{(estimate as any).estimate_number}</h2>
-            <p className="text-sm text-muted-foreground truncate">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold truncate">{(estimate as any).estimate_number}</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground truncate">
               {(estimate as any).clients?.name ?? (lang === "es" ? "Sin cliente" : "No client")}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {!isConverted && (
               <Select value={(estimate as any).status} onValueChange={(v) => updateStatusMutation.mutate(v)}>
-                <SelectTrigger className="w-32 h-8 text-xs">
+                <SelectTrigger className="w-[110px] sm:w-32 h-8 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -236,12 +236,12 @@ export default function EstimateDetail() {
                 </SelectContent>
               </Select>
             )}
-            {isConverted && <Badge variant="outline">{lang === "es" ? "Convertida" : "Converted"}</Badge>}
+            {isConverted && <Badge variant="outline" className="text-xs">{lang === "es" ? "Convertida" : "Converted"}</Badge>}
           </div>
         </div>
 
         {!isConverted && (estimate as any).status === "approved" && (
-          <Button onClick={() => convertToInvoiceMutation.mutate()} disabled={convertToInvoiceMutation.isPending} className="w-fit">
+          <Button onClick={() => convertToInvoiceMutation.mutate()} disabled={convertToInvoiceMutation.isPending} size="sm" className="w-full sm:w-fit">
             <FileText className="h-4 w-4 mr-1" />
             {convertToInvoiceMutation.isPending
               ? (lang === "es" ? "Convirtiendo..." : "Converting...")
@@ -250,7 +250,7 @@ export default function EstimateDetail() {
         )}
 
         {isConverted && (estimate as any).converted_invoice_id && (
-          <Button variant="outline" size="sm" className="w-fit" onClick={() => navigate(`/admin/invoices/${(estimate as any).converted_invoice_id}`)}>
+          <Button variant="outline" size="sm" className="w-full sm:w-fit" onClick={() => navigate(`/admin/invoices/${(estimate as any).converted_invoice_id}`)}>
             <FileText className="h-4 w-4 mr-1" /> {lang === "es" ? "Ver Factura" : "View Invoice"}
           </Button>
         )}
