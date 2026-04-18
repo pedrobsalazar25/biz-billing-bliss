@@ -53,13 +53,32 @@ export function ShareActions({
     return lines.join("\n");
   };
 
+  const buildWaMessage = () => {
+    const lines: string[] = [];
+    lines.push(`Hi ${clientName} 👋`);
+    lines.push("");
+    lines.push(
+      `Hope you're doing well! Here is your ${documentLabel} from ${senderName}${
+        totalFormatted ? ` for a total of *${totalFormatted}*` : ""
+      }.`
+    );
+    lines.push("");
+    lines.push("View & download:");
+    lines.push(publicUrl);
+    lines.push("");
+    lines.push("Thank you for your business!");
+    lines.push("");
+    lines.push("---");
+    lines.push(senderName);
+    if (business?.email) lines.push(`✉️ ${business.email}`);
+    if (business?.phone) lines.push(`📞 ${business.phone}`);
+    if (business?.address) lines.push(`📍 ${business.address.replace(/\n/g, ", ")}`);
+    return lines.join("\n");
+  };
+
   const emailSubject = encodeURIComponent(documentLabel);
   const emailBody = encodeURIComponent(buildEmailBody());
-  const waMsg = encodeURIComponent(
-    `Hi ${clientName}, here is your ${documentLabel}${
-      totalFormatted ? ` (${totalFormatted})` : ""
-    }:\n${publicUrl}`
-  );
+  const waMsg = encodeURIComponent(buildWaMessage());
 
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full min-w-0">
