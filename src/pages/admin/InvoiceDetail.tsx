@@ -203,7 +203,7 @@ export default function InvoiceDetail() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 min-w-0 w-full">
         <DetailHeader
           backTo="/admin/invoices"
           title={invoice.invoice_number}
