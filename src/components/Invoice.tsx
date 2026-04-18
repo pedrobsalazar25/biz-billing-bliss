@@ -315,12 +315,12 @@ const Invoice = ({ data }: InvoiceProps) => {
               <span className="text-primary-foreground/80 text-sm hidden md:block">
                 {invoiceData.from.name}
               </span>
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary-foreground flex items-center justify-center overflow-hidden">
-                {invoiceData.from.logoUrl ? (
-                  <img src={invoiceData.from.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                ) : (
-                  <img src={logo} alt="Logo" className="w-full h-full object-cover" />
-                )}
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-primary-foreground flex items-center justify-center overflow-hidden shadow-lg ring-2 ring-primary-foreground/20">
+                <img
+                  src={invoiceData.from.logoUrl || logo}
+                  alt={`${invoiceData.from.name || "Business"} logo`}
+                  className="w-full h-full object-contain p-1"
+                />
               </div>
             </div>
           </div>
