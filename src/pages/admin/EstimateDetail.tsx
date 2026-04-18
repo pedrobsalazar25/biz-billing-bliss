@@ -21,6 +21,7 @@ import { Plus, Pencil, Trash2, FileText } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 import { DetailHeader } from "@/components/DetailHeader";
+import { ShareActions } from "@/components/ShareActions";
 
 interface LineItemForm {
   description: string;
@@ -46,13 +47,27 @@ export default function EstimateDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("estimates")
-        .select("*, clients(name)")
+        .select("*, clients(name, phone)")
         .eq("id", id!)
         .single();
       if (error) throw error;
       return data;
     },
     enabled: !!id,
+  });
+
+  const { data: businessProfile } = useQuery({
+    queryKey: ["business-profile-for-estimate", (estimate as any)?.business_profile_id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("business_profiles")
+        .select("*")
+        .eq("id", (estimate as any).business_profile_id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!(estimate as any)?.business_profile_id,
   });
 
   const { data: items = [], isLoading: itemsLoading } = useQuery({
@@ -132,7 +147,9 @@ export default function EstimateDetail() {
 
   const updateStatusMutation = useMutation({
     mutationFn: async (status: string) => {
-      const { error } = await supabase.from("estimates").update({ status } as any).eq("id", id!);
+      const patch: any = { status };
+      if (status === "sent" || status === "approved") patch.is_shared = true;
+      const { error } = await supabase.from("estimates").update(patch).eq("id", id!);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -236,6 +253,35 @@ export default function EstimateDetail() {
             </>
           }
         />
+
+        {(estimate as any).public_share_slug && ((estimate as any).is_shared || ["sent","approved","converted"].includes((estimate as any).status)) && (
+          <ShareActions
+            publicUrl={`${window.location.origin}/e/${(estimate as any).public_share_slug}`}
+            clientName={(estimate as any).clients?.name ?? "Client"}
+            clientPhone={(estimate as any).clients?.phone ?? undefined}
+            documentLabel={`${lang === "es" ? "Cotización" : "Estimate"} ${(estimate as any).estimate_number}`}
+            pdfButtonLabel={t("invoiceDetail", "downloadPdf", lang)}
+            lang={lang}
+            totalFormatted={`${currencySymbol}${Number((estimate as any).total).toFixed(2)}`}
+            business={
+              businessProfile
+                ? {
+                    name: businessProfile.business_name,
+                    email: businessProfile.email ?? undefined,
+                    phone: businessProfile.phone ?? undefined,
+                    address: [
+                      businessProfile.address_line1,
+                      businessProfile.address_line2,
+                      [businessProfile.postal_code, businessProfile.city].filter(Boolean).join(" "),
+                      [businessProfile.state, businessProfile.country].filter(Boolean).join(", "),
+                    ]
+                      .filter((l) => l && String(l).trim().length > 0)
+                      .join("\n"),
+                  }
+                : undefined
+            }
+          />
+        )}
 
         {!isConverted && (estimate as any).status === "approved" && (
           <Button onClick={() => convertToInvoiceMutation.mutate()} disabled={convertToInvoiceMutation.isPending} size="sm" className="w-full sm:w-fit">

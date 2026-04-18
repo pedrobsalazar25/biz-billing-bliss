@@ -191,8 +191,10 @@ export type Database = {
           discount_amount: number
           estimate_number: string
           id: string
+          is_shared: boolean
           issue_date: string
           notes: string | null
+          public_share_slug: string | null
           status: Database["public"]["Enums"]["estimate_status"]
           subtotal: number
           tax_amount: number
@@ -212,8 +214,10 @@ export type Database = {
           discount_amount?: number
           estimate_number: string
           id?: string
+          is_shared?: boolean
           issue_date?: string
           notes?: string | null
+          public_share_slug?: string | null
           status?: Database["public"]["Enums"]["estimate_status"]
           subtotal?: number
           tax_amount?: number
@@ -233,8 +237,10 @@ export type Database = {
           discount_amount?: number
           estimate_number?: string
           id?: string
+          is_shared?: boolean
           issue_date?: string
           notes?: string | null
+          public_share_slug?: string | null
           status?: Database["public"]["Enums"]["estimate_status"]
           subtotal?: number
           tax_amount?: number
