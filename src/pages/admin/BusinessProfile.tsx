@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -22,6 +23,10 @@ interface ProfileForm {
   postal_code: string;
   country: string;
   invoice_prefix: string;
+  iban: string;
+  bizum: string;
+  payment_terms: string;
+  footer_note: string;
 }
 
 const emptyForm: ProfileForm = {
@@ -36,6 +41,10 @@ const emptyForm: ProfileForm = {
   postal_code: "",
   country: "",
   invoice_prefix: "INV-",
+  iban: "",
+  bizum: "",
+  payment_terms: "",
+  footer_note: "",
 };
 
 export default function BusinessProfile() {
@@ -74,6 +83,10 @@ export default function BusinessProfile() {
         postal_code: profile.postal_code ?? "",
         country: profile.country ?? "",
         invoice_prefix: profile.invoice_prefix ?? "INV-",
+        iban: (profile as any).iban ?? "",
+        bizum: (profile as any).bizum ?? "",
+        payment_terms: (profile as any).payment_terms ?? "",
+        footer_note: (profile as any).footer_note ?? "",
       });
       if (profile.logo_url) setLogoPreview(profile.logo_url);
     }
@@ -137,7 +150,11 @@ export default function BusinessProfile() {
         postal_code: form.postal_code || null,
         country: form.country || null,
         invoice_prefix: form.invoice_prefix || "INV-",
-      };
+        iban: form.iban || null,
+        bizum: form.bizum || null,
+        payment_terms: form.payment_terms || null,
+        footer_note: form.footer_note || null,
+      } as any;
       if (profile) {
         const { error } = await supabase.from("business_profiles").update(payload).eq("id", profile.id);
         if (error) throw error;
@@ -326,6 +343,48 @@ export default function BusinessProfile() {
             <div className="space-y-2">
               <Label>{t("profile", "country", lang)}</Label>
               <Input value={form.country} onChange={(e) => set("country", e.target.value)} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{t("profile", "paymentFooter", lang)}</CardTitle>
+            <p className="text-xs text-muted-foreground">{t("profile", "paymentFooterDesc", lang)}</p>
+          </CardHeader>
+          <CardContent className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2 sm:col-span-2">
+              <Label>{t("profile", "iban", lang)}</Label>
+              <Input
+                value={form.iban}
+                onChange={(e) => set("iban", e.target.value)}
+                placeholder="ES00 0000 0000 0000 0000 0000"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("profile", "bizum", lang)}</Label>
+              <Input
+                value={form.bizum}
+                onChange={(e) => set("bizum", e.target.value)}
+                placeholder="600 000 000"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("profile", "paymentTerms", lang)}</Label>
+              <Input
+                value={form.payment_terms}
+                onChange={(e) => set("payment_terms", e.target.value)}
+                placeholder={t("profile", "paymentTermsPlaceholder", lang)}
+              />
+            </div>
+            <div className="space-y-2 sm:col-span-2">
+              <Label>{t("profile", "footerNote", lang)}</Label>
+              <Textarea
+                value={form.footer_note}
+                onChange={(e) => set("footer_note", e.target.value)}
+                placeholder={t("profile", "footerNotePlaceholder", lang)}
+                rows={2}
+              />
             </div>
           </CardContent>
         </Card>
