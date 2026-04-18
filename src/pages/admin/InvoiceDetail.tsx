@@ -226,6 +226,7 @@ export default function InvoiceDetail() {
           <ShareActions
             publicUrl={`${window.location.origin}/i/${invoice.public_share_slug}`}
             clientName={(invoice.clients as any)?.name ?? "Client"}
+            clientPhone={(invoice.clients as any)?.phone ?? undefined}
             documentLabel={`${lang === "es" ? "Factura" : "Invoice"} ${invoice.invoice_number}`}
             pdfButtonLabel={t("invoiceDetail", "downloadPdf", lang)}
             lang={lang}

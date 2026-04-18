@@ -18,6 +18,7 @@ interface ShareActionsProps {
   totalFormatted?: string; // e.g. "€660.00"
   business?: BusinessContact;
   lang?: "es" | "en";
+  clientPhone?: string;
 }
 
 export function ShareActions({
@@ -29,6 +30,7 @@ export function ShareActions({
   totalFormatted,
   business,
   lang = "en",
+  clientPhone,
 }: ShareActionsProps) {
   const senderName = business?.name || fromName;
   const isEs = lang === "es";
@@ -114,6 +116,8 @@ export function ShareActions({
   const emailSubject = encodeURIComponent(documentLabel);
   const emailBody = encodeURIComponent(buildEmailBody());
   const waMsg = encodeURIComponent(buildWaMessage());
+  const waPhone = (clientPhone || "").replace(/[^\d]/g, "");
+  const waUrl = waPhone ? `https://wa.me/${waPhone}?text=${waMsg}` : `https://wa.me/?text=${waMsg}`;
 
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full min-w-0">
@@ -168,7 +172,7 @@ export function ShareActions({
           asChild
         >
           <a
-            href={`https://wa.me/?text=${waMsg}`}
+            href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
