@@ -21,6 +21,7 @@ import { Plus, Pencil, Trash2, FileText } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, t } from "@/hooks/useLanguage";
 import { DetailHeader } from "@/components/DetailHeader";
+import { ShareActions } from "@/components/ShareActions";
 
 interface LineItemForm {
   description: string;
@@ -46,13 +47,27 @@ export default function EstimateDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("estimates")
-        .select("*, clients(name)")
+        .select("*, clients(name, phone)")
         .eq("id", id!)
         .single();
       if (error) throw error;
       return data;
     },
     enabled: !!id,
+  });
+
+  const { data: businessProfile } = useQuery({
+    queryKey: ["business-profile-for-estimate", (estimate as any)?.business_profile_id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("business_profiles")
+        .select("*")
+        .eq("id", (estimate as any).business_profile_id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!(estimate as any)?.business_profile_id,
   });
 
   const { data: items = [], isLoading: itemsLoading } = useQuery({
