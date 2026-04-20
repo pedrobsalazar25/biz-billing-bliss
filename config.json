@@ -1,0 +1,95 @@
+{
+  "app": {
+    "status": true,
+    "toolbar": true,
+    "navigation_drawer": true,
+    "geolocation": false,
+    "cache": true,
+    "open_link_in_external_browser": false,
+    "zoom_controls": false,
+    "user_agent": "",
+    "privacy_policy_url": "",
+    "more_apps_url": "",
+    "redirect_url": ""
+  },
+  "intro": {
+    "status": false,
+    "sliders": []
+  },
+  "menus": [
+    {
+      "name": "Dashboard",
+      "type": "url",
+      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/home.png",
+      "url": "https://invoice-two-delta.vercel.app/admin",
+      "url_dark": "https://invoice-two-delta.vercel.app/admin"
+    },
+    {
+      "name": "Invoices",
+      "type": "url",
+      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/home.png",
+      "url": "https://invoice-two-delta.vercel.app/admin/invoices",
+      "url_dark": "https://invoice-two-delta.vercel.app/admin/invoices"
+    },
+    {
+      "name": "Clients",
+      "type": "url",
+      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/portfolio.png",
+      "url": "https://invoice-two-delta.vercel.app/admin/clients",
+      "url_dark": "https://invoice-two-delta.vercel.app/admin/clients"
+    },
+    {
+      "name": "Products",
+      "type": "url",
+      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/portfolio.png",
+      "url": "https://invoice-two-delta.vercel.app/admin/products",
+      "url_dark": "https://invoice-two-delta.vercel.app/admin/products"
+    },
+    {
+      "name": "Estimates",
+      "type": "url",
+      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/testimonials.png",
+      "url": "https://invoice-two-delta.vercel.app/admin/estimates",
+      "url_dark": "https://invoice-two-delta.vercel.app/admin/estimates"
+    },
+    {
+      "name": "Expenses",
+      "type": "url",
+      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/testimonials.png",
+      "url": "https://invoice-two-delta.vercel.app/admin/expenses",
+      "url_dark": "https://invoice-two-delta.vercel.app/admin/expenses"
+    },
+    {
+      "name": "Reports",
+      "type": "url",
+      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/contact.png",
+      "url": "https://invoice-two-delta.vercel.app/admin/reports",
+      "url_dark": "https://invoice-two-delta.vercel.app/admin/reports"
+    },
+    {
+      "name": "Business Profile",
+      "type": "url",
+      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/privacy-policy.png",
+      "url": "https://invoice-two-delta.vercel.app/admin/profile",
+      "url_dark": "https://invoice-two-delta.vercel.app/admin/profile"
+    }
+  ],
+  "ads": {
+    "ad_status": false,
+    "main_ads": "none",
+    "backup_ads": "none",
+    "admob_banner_unit_id": "",
+    "admob_interstitial_unit_id": "",
+    "admob_native_unit_id": "",
+    "admob_app_open_ad_unit_id": "",
+    "placement": {
+      "banner_home": false,
+      "interstitial_drawer_menu": false,
+      "interstitial_web_page_link": false,
+      "native_drawer_menu": false,
+      "native_exit_dialog": false,
+      "app_open_ad_on_start": false,
+      "app_open_ad_on_resume": false
+    }
+  }
+}
