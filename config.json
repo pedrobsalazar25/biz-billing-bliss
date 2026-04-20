@@ -16,7 +16,15 @@
     "status": false,
     "sliders": []
   },
-  "menus": [],
+  "menus": [
+    {
+      "name": "Home",
+      "type": "url",
+      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/home.png",
+      "url": "https://invoice-two-delta.vercel.app/admin",
+      "url_dark": "https://invoice-two-delta.vercel.app/admin"
+    }
+  ],
   "ads": {
     "ad_status": false,
     "main_ads": "none",
