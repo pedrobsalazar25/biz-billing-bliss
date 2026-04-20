@@ -18,13 +18,6 @@
   },
   "menus": [
     {
-      "name": "Dashboard",
-      "type": "url",
-      "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/home.png",
-      "url": "https://invoice-two-delta.vercel.app/admin",
-      "url_dark": "https://invoice-two-delta.vercel.app/admin"
-    },
-    {
       "name": "Invoices",
       "type": "url",
       "icon": "https://raw.githubusercontent.com/solodroidev/webdroid/master/assets/icons/home.png",
