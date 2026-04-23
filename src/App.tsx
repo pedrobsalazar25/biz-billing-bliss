@@ -39,7 +39,9 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Navigate to="/signin" replace />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/i/:slug" element={<PublicInvoice />} />
             <Route path="/e/:slug" element={<PublicEstimate />} />
             
