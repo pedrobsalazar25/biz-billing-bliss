@@ -47,7 +47,16 @@ export default function SignIn() {
       await signIn(parsed.data.email, parsed.data.password);
       navigate("/admin");
     } catch (err: any) {
-      toast.error(err.message || "Sign in failed");
+      const msg = String(err?.message || "");
+      if (/confirm|verified|not confirmed/i.test(msg)) {
+        toast.error(
+          lang === "es"
+            ? "Confirma tu correo antes de iniciar sesión. Revisa tu bandeja de entrada."
+            : "Please confirm your email before signing in. Check your inbox."
+        );
+      } else {
+        toast.error(msg || "Sign in failed");
+      }
     } finally {
       setLoading(false);
     }

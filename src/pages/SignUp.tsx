@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Globe } from "lucide-react";
+import { Globe, MailCheck } from "lucide-react";
 import { useLanguage, t } from "@/hooks/useLanguage";
 
 const schema = z.object({
@@ -23,6 +23,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const { user, loading: authLoading, signUp } = useAuth();
   const navigate = useNavigate();
   const { lang, toggleLang } = useLanguage();
@@ -47,6 +48,7 @@ export default function SignUp() {
     setLoading(true);
     try {
       await signUp(parsed.data.email, parsed.data.password, parsed.data.name);
+      setSubmitted(true);
       toast.success(t("login", "checkEmail", lang));
     } catch (err: any) {
       toast.error(err.message || "Sign up failed");
@@ -69,59 +71,89 @@ export default function SignUp() {
       </button>
 
       <Card className="w-full max-w-sm bg-white/30 backdrop-blur-xl shadow-xl border border-white/40">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">{t("login", "titleSignUp", lang)}</CardTitle>
-          <CardDescription>{t("login", "descSignUp", lang)}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-            <div className="space-y-2">
-              <Label htmlFor="name">{lang === "es" ? "Nombre" : "Name"}</Label>
-              <Input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                aria-invalid={!!errors.name}
-                required
-              />
-              {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">{t("login", "email", lang)}</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                aria-invalid={!!errors.email}
-                required
-              />
-              {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">{t("login", "password", lang)}</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                aria-invalid={!!errors.password}
-                required
-              />
-              {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? t("login", "loading", lang) : t("login", "signUp", lang)}
-            </Button>
-          </form>
-          <Link
-            to="/signin"
-            className="mt-4 block w-full text-center text-sm text-muted-foreground hover:underline"
-          >
-            {t("login", "switchToSignIn", lang)}
-          </Link>
-        </CardContent>
+        {submitted ? (
+          <>
+            <CardHeader className="text-center">
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <MailCheck className="h-6 w-6" />
+              </div>
+              <CardTitle className="text-2xl">
+                {lang === "es" ? "Revisa tu correo" : "Check your email"}
+              </CardTitle>
+              <CardDescription>
+                {lang === "es"
+                  ? `Te hemos enviado un enlace de confirmación a ${email}. Confirma tu correo para acceder a tu cuenta.`
+                  : `We sent a confirmation link to ${email}. Confirm your email to access your account.`}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-xs text-muted-foreground text-center mb-4">
+                {lang === "es"
+                  ? "¿No lo encuentras? Revisa la carpeta de spam."
+                  : "Can't find it? Check your spam folder."}
+              </p>
+              <Button asChild className="w-full" variant="outline">
+                <Link to="/signin">{t("login", "switchToSignIn", lang)}</Link>
+              </Button>
+            </CardContent>
+          </>
+        ) : (
+          <>
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl">{t("login", "titleSignUp", lang)}</CardTitle>
+              <CardDescription>{t("login", "descSignUp", lang)}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                <div className="space-y-2">
+                  <Label htmlFor="name">{lang === "es" ? "Nombre" : "Name"}</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    aria-invalid={!!errors.name}
+                    required
+                  />
+                  {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">{t("login", "email", lang)}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    aria-invalid={!!errors.email}
+                    required
+                  />
+                  {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">{t("login", "password", lang)}</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    aria-invalid={!!errors.password}
+                    required
+                  />
+                  {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
+                </div>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? t("login", "loading", lang) : t("login", "signUp", lang)}
+                </Button>
+              </form>
+              <Link
+                to="/signin"
+                className="mt-4 block w-full text-center text-sm text-muted-foreground hover:underline"
+              >
+                {t("login", "switchToSignIn", lang)}
+              </Link>
+            </CardContent>
+          </>
+        )}
       </Card>
     </div>
   );
