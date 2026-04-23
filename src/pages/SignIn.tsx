@@ -105,6 +105,12 @@ export default function SignIn() {
                 required
               />
               {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
+              <Link
+                to="/forgot-password"
+                className="block text-right text-xs text-muted-foreground hover:underline"
+              >
+                {t("login", "password", lang) === "Contraseña" ? "¿Olvidaste tu contraseña?" : "Forgot password?"}
+              </Link>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? t("login", "loading", lang) : t("login", "signIn", lang)}

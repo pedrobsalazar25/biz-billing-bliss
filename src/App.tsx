@@ -10,6 +10,8 @@ import AdminLayout from "@/components/AdminLayout";
 import Index from "./pages/Index";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { Navigate } from "react-router-dom";
 import PublicInvoice from "./pages/PublicInvoice";
 import PublicEstimate from "./pages/PublicEstimate";
@@ -42,6 +44,8 @@ const App = () => (
             <Route path="/login" element={<Navigate to="/signin" replace />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/i/:slug" element={<PublicInvoice />} />
             <Route path="/e/:slug" element={<PublicEstimate />} />
             
