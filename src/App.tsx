@@ -8,7 +8,9 @@ import { LanguageProvider } from "@/hooks/useLanguage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminLayout from "@/components/AdminLayout";
 import Index from "./pages/Index";
-import Login from "./pages/Login";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import { Navigate } from "react-router-dom";
 import PublicInvoice from "./pages/PublicInvoice";
 import PublicEstimate from "./pages/PublicEstimate";
 import Dashboard from "./pages/admin/Dashboard";
@@ -37,7 +39,9 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Navigate to="/signin" replace />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/i/:slug" element={<PublicInvoice />} />
             <Route path="/e/:slug" element={<PublicEstimate />} />
             
