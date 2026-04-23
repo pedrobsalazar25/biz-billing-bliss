@@ -48,6 +48,7 @@ export default function SignUp() {
     setLoading(true);
     try {
       await signUp(parsed.data.email, parsed.data.password, parsed.data.name);
+      setSubmitted(true);
       toast.success(t("login", "checkEmail", lang));
     } catch (err: any) {
       toast.error(err.message || "Sign up failed");
