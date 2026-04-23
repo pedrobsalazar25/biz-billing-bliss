@@ -23,6 +23,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const { user, loading: authLoading, signUp } = useAuth();
   const navigate = useNavigate();
   const { lang, toggleLang } = useLanguage();
