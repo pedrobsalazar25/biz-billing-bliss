@@ -1,9 +1,10 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import { ChevronDown } from "lucide-react";
 import { generatePdf } from "@/lib/generatePdf";
+import { useLanguage } from "@/hooks/useLanguage";
 
 type Language = "en" | "es";
 
@@ -103,7 +104,9 @@ interface InvoiceProps {
 }
 
 const Invoice = ({ data }: InvoiceProps) => {
-  const [language, setLanguage] = useState<Language>("es");
+  const { lang: appLang } = useLanguage();
+  const [language, setLanguage] = useState<Language>(appLang);
+  useEffect(() => { setLanguage(appLang); }, [appLang]);
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedItems, setTranslatedItems] = useState<Record<number, string> | null>(null);
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
