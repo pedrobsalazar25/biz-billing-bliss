@@ -299,6 +299,30 @@ const translations = {
     paused: { es: "Pausada", en: "Paused" },
     deleteConfirm: { es: "¿Eliminar esta factura recurrente?", en: "Delete this recurring invoice?" },
   },
+  common: {
+    email: { es: "Correo electrónico", en: "Email" },
+    name: { es: "Nombre", en: "Name" },
+    logoUploaded: { es: "Logo subido", en: "Logo uploaded" },
+    uploadFailed: { es: "Error al subir", en: "Upload failed" },
+    logoRemoved: { es: "Logo eliminado", en: "Logo removed" },
+    pdfDownloaded: { es: "¡PDF descargado!", en: "PDF downloaded!" },
+    pdfFailed: { es: "Error al generar PDF", en: "Failed to generate PDF" },
+    translationFailed: { es: "Error de traducción", en: "Translation failed" },
+    signInFailed: { es: "Error al iniciar sesión", en: "Sign in failed" },
+    signUpFailed: { es: "Error al crear cuenta", en: "Sign up failed" },
+    resetEmailFailed: { es: "No se pudo enviar el correo", en: "Could not send reset email" },
+    passwordUpdateFailed: { es: "No se pudo actualizar la contraseña", en: "Could not update password" },
+    csvEmpty: { es: "El CSV está vacío o no es válido", en: "CSV is empty or invalid" },
+    csvImported: { es: "filas importadas", en: "rows imported" },
+    csvImportFailed: { es: "Error al importar", en: "Import failed" },
+    csvDropOnly: { es: "Por favor, suelta un archivo .csv", en: "Please drop a .csv file" },
+    csvImporting: { es: "Importando...", en: "Importing..." },
+    csvDragHere: { es: "Arrastra y suelta un archivo CSV aquí", en: "Drag & drop a CSV file here" },
+    csvOrClick: { es: "o haz clic para buscar", en: "or click to browse" },
+    csvDownloadSample: { es: "Descargar CSV de ejemplo", en: "Download sample CSV" },
+    clientName: { es: "Nombre del cliente", en: "Client name" },
+    creating: { es: "Creando...", en: "Creating..." },
+  },
   reports: {
     title: { es: "Reportes y Análisis", en: "Reports & Analytics" },
     totalRevenue: { es: "Ingresos Totales", en: "Total Revenue" },
@@ -313,7 +337,7 @@ const translations = {
   },
 } as const;
 
-export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile" | "expenses" | "recurring" | "reports", key: string, lang: Lang): string {
+export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile" | "expenses" | "recurring" | "reports" | "common", key: string, lang: Lang): string {
   const s = translations[section] as any;
   const entry = s[key];
   if (!entry) return key;

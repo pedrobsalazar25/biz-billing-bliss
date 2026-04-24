@@ -55,7 +55,7 @@ export default function SignIn() {
             : "Please confirm your email before signing in. Check your inbox."
         );
       } else {
-        toast.error(msg || "Sign in failed");
+        toast.error(msg || (lang === "es" ? "Error al iniciar sesión" : "Sign in failed"));
       }
     } finally {
       setLoading(false);

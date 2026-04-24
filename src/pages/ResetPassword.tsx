@@ -71,7 +71,7 @@ export default function ResetPassword() {
       await supabase.auth.signOut();
       navigate("/signin", { replace: true });
     } catch (err: any) {
-      toast.error(err.message || "Could not update password");
+      toast.error(err.message || (lang === "es" ? "No se pudo actualizar la contraseña" : "Could not update password"));
     } finally {
       setLoading(false);
     }

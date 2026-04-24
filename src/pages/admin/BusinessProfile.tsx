@@ -119,9 +119,9 @@ export default function BusinessProfile() {
 
       setLogoPreview(logoUrl);
       qc.invalidateQueries({ queryKey: ["businessProfile"] });
-      toast.success("Logo uploaded");
+      toast.success(t("common", "logoUploaded", lang));
     } catch (err: any) {
-      toast.error(err.message || "Upload failed");
+      toast.error(err.message || t("common", "uploadFailed", lang));
     } finally {
       setUploading(false);
     }
@@ -132,7 +132,7 @@ export default function BusinessProfile() {
     await supabase.from("business_profiles").update({ logo_url: null }).eq("id", profile.id);
     setLogoPreview(null);
     qc.invalidateQueries({ queryKey: ["businessProfile"] });
-    toast.success("Logo removed");
+    toast.success(t("common", "logoRemoved", lang));
   };
 
   const saveMutation = useMutation({

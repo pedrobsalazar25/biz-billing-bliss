@@ -38,7 +38,7 @@ export default function ForgotPassword() {
       if (error) throw error;
       setSubmitted(true);
     } catch (err: any) {
-      toast.error(err.message || "Could not send reset email");
+      toast.error(err.message || (lang === "es" ? "No se pudo enviar el correo" : "Could not send reset email"));
     } finally {
       setLoading(false);
     }

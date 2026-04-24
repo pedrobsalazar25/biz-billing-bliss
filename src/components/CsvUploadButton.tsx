@@ -1,8 +1,9 @@
 import { useRef, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Download, FileUp } from "lucide-react";
+import { Download, FileUp } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useLanguage, t } from "@/hooks/useLanguage";
 
 interface CsvUploadButtonProps {
   onParsed: (rows: Record<string, string>[]) => Promise<void>;
@@ -35,17 +36,18 @@ export default function CsvUploadButton({ onParsed, label = "Upload CSV", sample
   const ref = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const { lang } = useLanguage();
 
   const handleFile = async (file: File) => {
     setLoading(true);
     try {
       const text = await file.text();
       const rows = parseCsv(text);
-      if (rows.length === 0) { toast.error("CSV is empty or invalid"); return; }
+      if (rows.length === 0) { toast.error(t("common", "csvEmpty", lang)); return; }
       await onParsed(rows);
-      toast.success(`${rows.length} rows imported`);
+      toast.success(`${rows.length} ${t("common", "csvImported", lang)}`);
     } catch (err: any) {
-      toast.error(err.message || "Import failed");
+      toast.error(err.message || t("common", "csvImportFailed", lang));
     } finally {
       setLoading(false);
       if (ref.current) ref.current.value = "";
@@ -57,8 +59,8 @@ export default function CsvUploadButton({ onParsed, label = "Upload CSV", sample
     setDragOver(false);
     const file = e.dataTransfer.files?.[0];
     if (file && file.name.endsWith(".csv")) handleFile(file);
-    else toast.error("Please drop a .csv file");
-  }, []);
+    else toast.error(t("common", "csvDropOnly", lang));
+  }, [lang]);
 
   const onDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -106,13 +108,13 @@ export default function CsvUploadButton({ onParsed, label = "Upload CSV", sample
           <FileUp className="h-8 w-8 text-muted-foreground" />
         )}
         <p className="text-sm font-medium text-foreground">
-          {loading ? "Importing..." : "Drag & drop a CSV file here"}
+          {loading ? t("common", "csvImporting", lang) : t("common", "csvDragHere", lang)}
         </p>
-        <p className="text-xs text-muted-foreground">or click to browse</p>
+        <p className="text-xs text-muted-foreground">{t("common", "csvOrClick", lang)}</p>
       </div>
       {sampleHeaders && (
         <Button variant="ghost" size="sm" className="text-xs text-muted-foreground px-2" onClick={(e) => { e.stopPropagation(); downloadSample(); }}>
-          <Download className="h-3.5 w-3.5 mr-1" /> Download sample CSV
+          <Download className="h-3.5 w-3.5 mr-1" /> {t("common", "csvDownloadSample", lang)}
         </Button>
       )}
     </div>
