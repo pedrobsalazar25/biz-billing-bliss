@@ -50,11 +50,10 @@ const PublicInvoice = () => {
       // Map to InvoiceData shape
       const mapped: InvoiceData = {
         invoiceNumber: invoice.invoice_number,
-        date: new Date(invoice.issue_date).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }),
+        date: new Date(invoice.issue_date).toLocaleDateString(
+          (typeof window !== "undefined" && localStorage.getItem("app_lang") === "en") ? "en-US" : "es-ES",
+          { year: "numeric", month: "long", day: "numeric" }
+        ),
         currency: invoice.currency === "USD" ? "USD" : "EUR",
         from: {
           name: business?.business_name || "",
