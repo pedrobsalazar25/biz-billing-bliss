@@ -104,7 +104,9 @@ interface InvoiceProps {
 }
 
 const Invoice = ({ data }: InvoiceProps) => {
-  const [language, setLanguage] = useState<Language>("es");
+  const { lang: appLang } = useLanguage();
+  const [language, setLanguage] = useState<Language>(appLang);
+  useEffect(() => { setLanguage(appLang); }, [appLang]);
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedItems, setTranslatedItems] = useState<Record<number, string> | null>(null);
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
