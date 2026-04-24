@@ -337,7 +337,7 @@ const translations = {
   },
 } as const;
 
-export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile" | "expenses" | "recurring" | "reports", key: string, lang: Lang): string {
+export function t(section: "onboarding" | "login" | "admin" | "dashboard" | "clients" | "products" | "invoicesPage" | "invoiceDetail" | "profile" | "expenses" | "recurring" | "reports" | "common", key: string, lang: Lang): string {
   const s = translations[section] as any;
   const entry = s[key];
   if (!entry) return key;
