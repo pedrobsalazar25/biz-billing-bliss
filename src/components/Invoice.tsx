@@ -156,7 +156,7 @@ const Invoice = ({ data }: InvoiceProps) => {
       await generatePdf(invoiceRef.current, `invoice-${invoiceData.invoiceNumber}`);
       toast.success(language === "en" ? "PDF downloaded!" : "¡PDF descargado!");
     } catch {
-      toast.error("Failed to generate PDF");
+      toast.error(language === "en" ? "Failed to generate PDF" : "Error al generar PDF");
     } finally {
       setIsGeneratingPdf(false);
     }
@@ -211,9 +211,9 @@ const Invoice = ({ data }: InvoiceProps) => {
       }
 
       setLanguage(targetLang);
-      toast.success(language === "en" ? "Traducido a Español" : "Translated to English");
+      toast.success(language === "en" ? "Translated to English" : "Traducido a Español");
     } catch (error) {
-      toast.error("Translation failed");
+      toast.error(language === "en" ? "Translation failed" : "Error de traducción");
     } finally {
       setIsTranslating(false);
     }

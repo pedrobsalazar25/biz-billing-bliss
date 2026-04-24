@@ -182,7 +182,7 @@ export default function ClientCombobox({ value, onValueChange }: ClientComboboxP
               />
             </div>
             <div className="space-y-2">
-              <Label>Email</Label>
+              <Label>{lang === "es" ? "Correo electrónico" : "Email"}</Label>
               <Input
                 type="email"
                 value={newEmail}

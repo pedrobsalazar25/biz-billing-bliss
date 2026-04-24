@@ -51,7 +51,7 @@ export default function SignUp() {
       setSubmitted(true);
       toast.success(t("login", "checkEmail", lang));
     } catch (err: any) {
-      toast.error(err.message || "Sign up failed");
+      toast.error(err.message || (lang === "es" ? "Error al crear cuenta" : "Sign up failed"));
     } finally {
       setLoading(false);
     }
