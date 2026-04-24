@@ -49,7 +49,7 @@ export default function Index() {
         className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-card/80 backdrop-blur px-3 py-1.5 text-xs font-medium text-foreground shadow-sm border border-border"
       >
         <Globe className="h-3.5 w-3.5" />
-        {lang === "es" ? "EN" : "ES"}
+        {lang === "es" ? "English" : "Español"}
       </button>
 
       {/* Image */}
