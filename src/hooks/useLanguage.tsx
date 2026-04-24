@@ -21,12 +21,11 @@ function getInitialLang(): Lang {
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>(getInitialLang);
 
-  const toggleLang = () =>
-    setLang((l) => {
-      const next = l === "es" ? "en" : "es";
-      localStorage.setItem(STORAGE_KEY, next);
-      return next;
-    });
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, lang);
+  }, [lang]);
+
+  const toggleLang = () => setLang((l) => (l === "es" ? "en" : "es"));
 
   return (
     <LanguageContext.Provider value={{ lang, toggleLang }}>
